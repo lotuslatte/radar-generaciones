@@ -629,7 +629,7 @@ RG_CONTENT.characters = {
   grupo:     { name: 'Las del salón', short: 'las del salón', skin: '#b07a52', hair: '#24160d', style: 'long', shirt: '#7a4e9c', bg: '#ece2f3', group: true },
   chico:     { name: 'Un chico del otro salón', short: 'el chico', skin: '#a26e48', hair: '#1d140e', style: 'short', shirt: '#2e7d4f', bg: '#dcefe3' },
   vecina:    { name: 'La vecina', short: 'la vecina', skin: '#a06c47', hair: '#3a2416', style: 'bun', shirt: '#b5651d', bg: '#f3e3cf' },
-  jefa:      { name: 'Doña Carmen, del mercado', short: 'doña Carmen', skin: '#9c6a45', hair: '#2b1a10', style: 'bun', shirt: '#1b998b', bg: '#d6efec' },
+  jefa:      { name: 'Doña Gloria, del mercado', short: 'doña Gloria', skin: '#9c6a45', hair: '#2b1a10', style: 'bun', shirt: '#1b998b', bg: '#d6efec' },
   pareja:    { name: 'La pareja de tu mamá', short: 'la pareja de tu mamá', skin: '#94623f', hair: '#1d140e', style: 'short', shirt: '#5f6470', bg: '#e6e0d4' },
   celular:   { name: 'Tu celular', short: 'tu celular', phone: true, bg: '#1f2a44' },
   self:      { name: 'Tú', short: 'tú', skin: '#b98459', hair: '#1d140e', style: 'long', shirt: '#2f6db5', bg: '#dde8f6' },
@@ -704,10 +704,10 @@ RG_CONTENT.profiles = {
     girls: [
       { name: 'Milagros', age: 15, rel: '', conf: 'mama', skin: '#b58058', hair: '#1d140e', style: 'ponytail', shirt: '#2f6db5', bg: '#dde8f6',
         intro: 'Milagros tiene 15 años y vive en Castilla, Piura. Ayuda a su mamá en el puesto de jugos del mercado y quiere terminar el cole para estudiar enfermería.' },
-      { name: 'Kiara', age: 14, rel: 'su hermana menor', conf: 'mama', skin: '#b78258', hair: '#24160d', style: 'long', shirt: '#e0457b', bg: '#f9dde7',
-        intro: 'Kiara tiene 14 años y es la hermana menor de Milagros. Le encanta bailar y grabar videos con sus amigas.' },
+      { name: 'Valeria', age: 14, rel: 'su hermana menor', conf: 'mama', skin: '#b78258', hair: '#24160d', style: 'long', shirt: '#e0457b', bg: '#f9dde7',
+        intro: 'Valeria tiene 14 años y es la hermana menor de Milagros. Le encanta bailar y grabar videos con sus amigas.' },
       { name: 'Ariana', age: 15, rel: 'su prima', conf: 'tia', skin: '#a9764f', hair: '#3a2416', style: 'curly', shirt: '#1b998b', bg: '#d6efec',
-        intro: 'Ariana tiene 15 años, es prima de Kiara y vive con su tía Nelly a dos cuadras.' },
+        intro: 'Ariana tiene 15 años, es prima de Valeria y vive con su tía Nelly a dos cuadras.' },
       { name: 'Nicole', age: 16, rel: 'su amiga del barrio', conf: 'hermano', skin: '#b07a52', hair: '#2b1a10', style: 'bun', shirt: '#7a4e9c', bg: '#ece2f3',
         intro: 'Nicole tiene 16 años, es la amiga del barrio de Ariana y trabaja los domingos en el mercado.' }
     ]
@@ -726,8 +726,8 @@ RG_CONTENT.profiles = {
         intro: 'Rocío tiene 15 años y es prima de Yesenia. Su familia se va al monte en temporada de castaña.' },
       { name: 'Daniela', age: 14, rel: 'su vecina', conf: 'abuela', skin: '#b07a52', hair: '#2b1a10', style: 'bun', shirt: '#2f6db5', bg: '#dde8f6',
         intro: 'Daniela tiene 14 años, es vecina de Rocío y vive con su abuela desde que su papá se fue a la mina.' },
-      { name: 'Flor', age: 15, rel: 'su compañera de clase', conf: 'amiga', skin: '#9c6a45', hair: '#1d140e', style: 'curly', shirt: '#7a4e9c', bg: '#ece2f3',
-        intro: 'Flor tiene 15 años, se sienta al lado de Daniela en el cole y vende refrescos en la feria los fines de semana.' }
+      { name: 'Lucero', age: 15, rel: 'su compañera de clase', conf: 'amiga', skin: '#9c6a45', hair: '#1d140e', style: 'curly', shirt: '#7a4e9c', bg: '#ece2f3',
+        intro: 'Lucero tiene 15 años, se sienta al lado de Daniela en el cole y vende refrescos en la feria los fines de semana.' }
     ]
   },
   sp: {
@@ -2309,7 +2309,7 @@ function branch(key, deed, name, steps, o) {
 
 // Castilla: the dream subplot is already Beca 18, so here it is a job fair.
 branch('feria', 'frase', 'Una oportunidad de verdad', [
-  { who: 'jefa', text: 'Doña Carmen te cuenta que en la municipalidad hay una feria de empleo para jóvenes, con contrato y horario.',
+  { who: 'jefa', text: 'Doña Gloria te cuenta que en la municipalidad hay una feria de empleo para jóvenes, con contrato y horario.',
     L: { l: 'Seguro es puro cuento', fx: { p: -2 } },
     R: { l: 'Voy con mi DNI y mi CV', fx: { p: 3, a: -2 }, tags: ['As'] } },
   { who: 'jefa', text: 'En la feria, un stand ofrece «trabajo en Lima con alojamiento» y no da dirección. El de la municipalidad pide tu DNI y te da una dirección.',
@@ -2457,7 +2457,7 @@ branch('trato', 'ubicacion', 'El trato', [
 card('end_win_rama', { kind: 'ending', title: 'Diciembre: lo que abrió {prev}', recall: 'cerró lo que había abierto la chica de antes', who: 'girl',
   text: 'En la clausura te acuerdas de lo que abrió {prev}. Este año te tocó a ti cerrarlo.',
   textIf: {
-    b_feria_good: 'En la clausura le cuentas a doña Carmen que en enero empiezas en la muni. «Ves, eso sí se podía comprobar.»',
+    b_feria_good: 'En la clausura le cuentas a doña Gloria que en enero empiezas en la muni. «Ves, eso sí se podía comprobar.»',
     b_beca_good: 'En la clausura, la miss Lucy te felicita delante del salón: quedaste preseleccionada en el Pronabec, sin pagarle a nadie.',
     b_yuli_good: 'Yuli te busca en la clausura con su mamá. «Ella es la que me dijo que no respondiera.»',
     b_carpeta_good: 'En la clausura, la miss Lucy cuenta que la denuncia del cole avanzó con las capturas de varias chicas. Las tuyas estaban ahí.',
@@ -2532,7 +2532,7 @@ tstep('bi_fam_2', 'bi', 'familia', 2, 'mama',
 tstep('bi_fam_3a', 'bi', 'familia', 3, 'celular',
   'En un grupo de empleos te ofrecen «chamba fácil los domingos, S/ 80 por día, sin experiencia». Te acuerdas de lo que contó la miss.',
   { l: 'Escribo al inbox', fx: { p: 4, s: 2 }, line: 'La familia: buscó chamba en un inbox, sin saber quién escribía.' },
-  { l: 'Mejor le pregunto a doña Carmen, que sí conozco', fx: { p: 3 }, radar: 1, tags: ['As'], line: 'La familia: consiguió chamba con doña Carmen, que la conoce.' }, prev('t_fam_chamba', 5));
+  { l: 'Mejor le pregunto a doña Gloria, que sí conozco', fx: { p: 3 }, radar: 1, tags: ['As'], line: 'La familia: consiguió chamba con doña Gloria, que la conoce.' }, prev('t_fam_chamba', 5));
 tstep('bi_fam_3b', 'bi', 'familia', 3, 'mama',
   'La junta del mercado le presta a tu mamá para mudar el puesto otra vez, a la esquina buena. «Vamos a salir de esta.»',
   { l: 'Le ayudo a pintar el letrero', fx: { f: 5, a: -2 }, line: 'La familia: el puesto volvió a la esquina buena.' },

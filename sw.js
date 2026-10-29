@@ -1,6 +1,6 @@
 // Offline support for RADAR Generaciones. Pages are network-first so updates show up
 // on the next visit; everything else is cache-first.
-const CACHE = 'radar-generaciones-v2';
+const CACHE = 'radar-generaciones-v3';
 const ASSETS = [
   './',
   './index.html',
