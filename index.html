@@ -235,6 +235,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .sig-row .fn { font-size: 12px; color: var(--muted); font-weight: 800; }
 .exits li { position: relative; padding: 4px 0 4px 16px; font-size: 14px; line-height: 1.35; }
 .exits li::before { content: ''; position: absolute; left: 2px; top: 11px; width: 7px; height: 7px; border-radius: 50%; background: var(--cut); }
+.attempt details.sigs { margin-top: 14px; }
+.attempt details.sigs summary { cursor: pointer; font-size: 13px; font-weight: 900; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 0; min-height: 32px; }
+.attempt details.sigs[open] summary { margin-bottom: 4px; }
 
 .letters { display: flex; gap: 6px; }
 .letter { flex: 1; border-radius: 12px; padding: 10px 4px 8px; text-align: center; background: var(--night-2); border: 2px solid var(--night-line); color: var(--night-muted); }
@@ -583,7 +586,7 @@ RG_CONTENT.signals = {
   dormir: {"label": "Trago y quedarte a dormir", "why": "Con trago y lejos de casa es más difícil cuidarte.", "fn": 8},
   fiesta_deuda: {"label": "Ella también les debe algo", "why": "Mile siente que les debe el celular. Ella también necesita ayuda; no es su culpa.", "fn": 3},
   facil: {"label": "Plata fácil y rápida", "why": "S/ 400 diarios por dar likes no existe. Es el gancho.", "fn": 1},
-  pagar: {"label": "Pagar para trabajar", "why": "Si tienes que pagar para entrar, el negocio eres tú.", "fn": 3},
+  pagar: {"label": "Pagar para trabajar", "why": "Un trabajo de verdad te paga a ti, no te cobra.", "fn": 3},
   yape_urgencia: {"label": "Te apura", "why": "“Cupos hasta las 12” busca que decidas sin pensarlo.", "fn": 5},
   capturas: {"label": "“Pruebas” que no puedes comprobar", "why": "Las capturas de pagos se pueden editar o inventar.", "fn": 2},
   gancho: {"label": "Te pagan poquito al inicio", "why": "Te devuelven un poco para que confíes y pongas más.", "fn": 3},
@@ -601,7 +604,7 @@ RG_CONTENT.signals = {
   nocomentes: {"label": "«No lo comentes en tu casa»", "why": "Pedirte que no le cuentes a tu familia busca que nadie sepa adónde vas.", "fn": 4},
   terminal: {"label": "Te recogen en el terminal", "why": "Si te recogen al llegar, no controlas adónde te llevan.", "fn": 8},
   // «Pagar para entrar» (Dani)
-  inscripcion: {"label": "Pagar para entrar", "why": "Si tienes que pagar para entrar, el negocio eres tú. Nadie cobra por darte trabajo.", "fn": 3},
+  inscripcion: {"label": "Pagar para entrar", "why": "Te cobran por algo que debería pagarte a ti. Un trabajo de verdad no pide inscripción.", "fn": 3},
   asegurado: {"label": "Curso y trabajo asegurado", "why": "S/ 2,500 desde la próxima semana, sin experiencia, es demasiado bueno para ser verdad.", "fn": 1},
   cuentanueva: {"label": "Una cuenta nueva dice «es real»", "why": "Otra cuenta recién creada que responde por el anuncio no prueba nada.", "fn": 2},
   cupos: {"label": "«Cupos limitados»", "why": "Busca que te inscribas sin revisar ni preguntarle a nadie.", "fn": 5},
@@ -700,6 +703,12 @@ RG_CONTENT.profiles = {
     start: { f: 60, a: 50, p: 35, s: 50 },
     arcs: ['chiclayo', 'fotos', 'casting', 'beca', 'alex'],
     friend: 'Nayeli',
+    // If her friend leaves with an offer (story «amiga»), the next one takes her place.
+    altFriends: [
+      { name: 'Fiorella, tu mejor amiga', short: 'Fiorella', skin: '#a9764f', hair: '#24160d', style: 'ponytail', shirt: '#2f6db5', bg: '#dde8f6' },
+      { name: 'Dayana, tu amiga del salón', short: 'Dayana', skin: '#b07a52', hair: '#1d140e', style: 'curly', shirt: '#1b998b', bg: '#d6efec' },
+      { name: 'Milena, tu amiga del barrio', short: 'Milena', skin: '#a26e48', hair: '#2b1a10', style: 'bun', shirt: '#c0392b', bg: '#f6dcd8' }
+    ],
     cast: { amiga: { name: 'Nayeli, tu mejor amiga', short: 'Nayeli', skin: '#b98459', hair: '#1d140e', style: 'long', shirt: '#e0457b', bg: '#f9dde7' } },
     girls: [
       { name: 'Milagros', age: 15, rel: '', conf: 'mama', skin: '#b58058', hair: '#1d140e', style: 'ponytail', shirt: '#2f6db5', bg: '#dde8f6',
@@ -718,6 +727,12 @@ RG_CONTENT.profiles = {
     start: { f: 36, a: 55, p: 30, s: 45 },
     arcs: ['anfitriona', 'fotos', 'beca', 'casting', 'dani'],
     friend: 'Jhoselyn',
+    // If her friend leaves with an offer (story «amiga»), the next one takes her place.
+    altFriends: [
+      { name: 'Xiomara, tu mejor amiga', short: 'Xiomara', skin: '#9c6a45', hair: '#1d140e', style: 'ponytail', shirt: '#e0457b', bg: '#f9dde7' },
+      { name: 'Brenda, tu amiga del salón', short: 'Brenda', skin: '#a9764f', hair: '#24160d', style: 'short', shirt: '#2f6db5', bg: '#dde8f6' },
+      { name: 'Celeste, tu amiga de la feria', short: 'Celeste', skin: '#b07a52', hair: '#1d140e', style: 'curly', shirt: '#7a4e9c', bg: '#ece2f3' }
+    ],
     cast: { amiga: { name: 'Jhoselyn, tu mejor amiga', short: 'Jhoselyn', skin: '#a9764f', hair: '#1d140e', style: 'long', shirt: '#f2b134', bg: '#fbefd2' } },
     girls: [
       { name: 'Yesenia', age: 16, rel: '', conf: 'amiga', skin: '#a26e48', hair: '#1d140e', style: 'long', shirt: '#1b998b', bg: '#d6efec',
@@ -736,6 +751,12 @@ RG_CONTENT.profiles = {
     start: { f: 45, a: 32, p: 50, s: 62 },
     arcs: ['freefire', 'fotos', 'casting', 'chiclayo', 'alex'],
     friend: 'Ale',
+    // If her friend leaves with an offer (story «amiga»), the next one takes her place.
+    altFriends: [
+      { name: 'Romina, tu amiga de la escuadra', short: 'Romina', skin: '#a9764f', hair: '#1d140e', style: 'ponytail', shirt: '#c0392b', bg: '#f6dcd8' },
+      { name: 'Flavia, tu amiga del salón', short: 'Flavia', skin: '#b98459', hair: '#24160d', style: 'long', shirt: '#1b998b', bg: '#d6efec' },
+      { name: 'Naomi, tu amiga del barrio', short: 'Naomi', skin: '#a26e48', hair: '#2b1a10', style: 'bun', shirt: '#f2b134', bg: '#fbefd2' }
+    ],
     cast: { amiga: { name: 'Ale, tu amiga de la escuadra', short: 'Ale', skin: '#b58058', hair: '#3a2416', style: 'short', shirt: '#2e7d4f', bg: '#dcefe3' } },
     girls: [
       { name: 'Camila', age: 14, rel: '', conf: 'hermana', skin: '#b98459', hair: '#1d140e', style: 'long', shirt: '#1f2a44', bg: '#e2e5ec',
@@ -758,6 +779,12 @@ RG_CONTENT.profiles = {
     start: { f: 64, a: 36, p: 45, s: 52 },
     arcs: ['freefire', 'fotos', 'chiclayo', 'casting', 'alex', 'dani'],
     friend: 'Fer',
+    // If her friend leaves with an offer (story «amiga»), the next one takes her place.
+    altFriends: [
+      { name: 'Gianella, tu amiga del juego', short: 'Gianella', skin: '#b58058', hair: '#1d140e', style: 'long', shirt: '#2e7d4f', bg: '#dcefe3' },
+      { name: 'Tatiana, tu amiga del salón', short: 'Tatiana', skin: '#a26e48', hair: '#24160d', style: 'ponytail', shirt: '#e0457b', bg: '#f9dde7' },
+      { name: 'Estrella, tu amiga del barrio', short: 'Estrella', skin: '#9c6a45', hair: '#2b1a10', style: 'curly', shirt: '#2f6db5', bg: '#dde8f6' }
+    ],
     cast: { amiga: { name: 'Fer, tu amiga del juego', short: 'Fer', skin: '#b07a52', hair: '#1d140e', style: 'short', shirt: '#1f2a44', bg: '#e2e5ec' } },
     girls: [
       { name: 'Cris', age: 15, rel: '', conf: 'hermana', skin: '#a9764f', hair: '#1d140e', style: 'short', shirt: '#7a4e9c', bg: '#ece2f3',
@@ -803,8 +830,8 @@ daily('d_cuenta_abierta', 'amiga', '«Oe, tu perfil está abierto. Cualquiera ve
   { l: 'Lo pongo privado', fx: { a: -3, s: 2 }, radar: 1, tags: ['E0'] }, { theme: 'celular' });
 
 daily('d_tutora_charla', 'tutora', 'En tutoría, la miss cuenta que hay ofertas de trabajo falsas que buscan chicas de su edad.',
-  { l: 'Me aburro y juego', fx: { a: 2 } },
-  { l: 'Le pregunto cómo reconocerlas', fx: { s: 4 }, radar: 1, tags: ['E0'] });
+  { l: 'Me aburro y juego', fx: { a: 2 }, set: ['oyo_charla'] },
+  { l: 'Le pregunto cómo reconocerlas', fx: { s: 4 }, radar: 1, tags: ['E0'], set: ['oyo_charla'] });
 
 daily('d_papa_pasaje', 'papa', '«Este mes no alcanza para tu pasaje al cole, hija.»',
   { l: 'Camino nomás', fx: { s: -4, p: 2 } },
@@ -1309,7 +1336,7 @@ memory('mem_told', 'm_told', 'prev',
   { l: 'Ya, ya', fx: { f: 2 } },
   { l: 'Gracias, de verdad', fx: { f: 4, a: 3 }, radar: 1, tags: ['E0'] });
 
-memory('mem_report', 'm_report', 'prev',
+memory('mem_report', 'm_reportcap', 'prev',
   '{memname} reportó una cuenta que le escribía. «Lo que sirvió fue guardar las capturas antes de bloquear.»',
   { l: 'Qué valiente', fx: { s: 3 } },
   { l: '¿Me enseñas cómo?', fx: { a: 3 }, radar: 1, tags: ['E0'] });
@@ -1351,10 +1378,18 @@ memory('mem_end_s_high', 'm_end_s_high', 'abuela',
   '«{memname} quería irse a Lima a como dé lugar», te dice tu abuela. «Los sueños de verdad se pueden revisar.»',
   { l: 'Ella exageraba', fx: { s: 2 } },
   { l: '¿Cómo los reviso?', fx: { s: 4 }, radar: 1, tags: ['E0'] });
-memory('mem_win', 'm_win', 'prev',
+memory('mem_win', 'm_wintold', 'prev',
   '{memname} terminó el año entera. «Lo que más me sirvió fue no guardarme nada», te dice.',
   { l: 'Tú eres diferente', fx: { s: -2 } },
   { l: 'Voy a hacer lo mismo', fx: { f: 4, a: 2 }, tags: ['E0'] });
+
+// The friend who left with an offer (story «amiga») does not come back for
+// the girls after her; her new friend is another girl of the cast, and the
+// school still asks for the one who left.
+memory('mem_friend_gone', 'm_friend_gone', 'tutora',
+  'En la formación, la miss Lucy pregunta si alguien sabe de {gonefriend}. Se fue a trabajar a otra ciudad y su mamá no logra hablar con ella.',
+  { l: 'Le escribo otra vez', fx: { a: 3 } },
+  { l: 'Le pregunto a la miss dónde se avisa', fx: { f: 2 }, radar: 1, tags: ['Re'] });
 
 ;
 /* Chamba en Chiclayo: fake job offer from a Facebook job group, moves to
@@ -1362,7 +1397,12 @@ memory('mem_win', 'm_win', 'prev',
  * 03 App simulador/cases/01_chiclayo.json. */
 arc('chiclayo', {
   title: 'Chamba en Chiclayo', channel: 'facebook',
-  recruiter: { name: 'Rosa · Empleos Norte', skin: '#b58058', hair: '#5a2e14', style: 'long', shirt: '#b5651d', bg: '#f3e3cf' },
+  recruiter: { name: 'Rosa · Empleos Norte', names: [
+    { name: 'Rosa · Empleos Norte', short: 'Rosa', re: 'Empleos Norte Perú' },
+    { name: 'Sol del Norte Empleos', short: 'Sol del Norte', re: 'Sol del Norte Trabajos' },
+    { name: 'Chambas Chiclayo Ya', short: 'Chambas Chiclayo', re: 'Chambas Norte Ya' },
+    { name: 'Bolsa Laboral Mochica', short: 'Bolsa Mochica', re: 'Mochica Empleos' }],
+  skin: '#b58058', hair: '#5a2e14', style: 'long', shirt: '#b5651d', bg: '#f3e3cf' },
   start: 'chi_antes', recontact: 'chi_re', meetCard: 'chi_meet', supportCard: 'chi_sup',
   recall: 'casi se subió a un bus a Chiclayo',
   exits: [
@@ -1387,7 +1427,7 @@ ac('chi_a', 'chiclayo', 'A', 'rec', 'Comentaste en un grupo de empleos y te lleg
   { l: 'No respondo', cut: true, tags: ['R', 'Ac'], fx: { p: -2 } },
   { l: 'Sii, ¿de qué se trata?', go: 'chi_ab1', fx: { s: 5, p: 3 } });
 
-ac('chi_ab1', 'chiclayo', 'AB', 'rec', 'Rosa responde al toque.', [
+ac('chi_ab1', 'chiclayo', 'AB', 'rec', '{rshort} responde al toque.', [
   ['Es de mesera nomás, bien tranqui'],
   ['El restaurante es nuevo, todavía no tiene página jeje', 'sinverificar'],
   ['Te paso a mi WhatsApp para coordinar más rápido, ¿ya?', 'privado']
@@ -1400,7 +1440,7 @@ ac('chi_ab2', 'chiclayo', 'AB', 'self',
   { l: 'Si no existe, corto', cut: true, tags: ['As', 'Ac'] },
   { l: 'Igual le paso mi número', go: 'chi_b1', fx: { s: 3 } });
 
-ac('chi_b1', 'chiclayo', 'B', 'rec', 'Ahora Rosa te escribe a tu WhatsApp.', [
+ac('chi_b1', 'chiclayo', 'B', 'rec', 'Ahora {rshort} te escribe a tu WhatsApp.', [
   ['Listo mami. El pasaje a Chiclayo te lo pagamos nosotros', 'pasaje'],
   ['Mándame foto de tu DNI y una foto tuya de cuerpo entero, para la dueña', 'fotocuerpo'],
   ['Es urgente porque el grupo viaja el viernes', 'urgencia']
@@ -1408,7 +1448,7 @@ ac('chi_b1', 'chiclayo', 'B', 'rec', 'Ahora Rosa te escribe a tu WhatsApp.', [
   { l: '¿Foto de cuerpo para ser mesera?', go: 'chi_b2', gap: 0, tags: ['R'] },
   { l: 'Ahorita te mando', go: 'chi_bc1', fx: { s: 4, p: 4 }, set: ['gift_any', 'gift_chiclayo', 'sent'] });
 
-ac('chi_b2', 'chiclayo', 'B', 'rec', 'Rosa se pone seca.', [
+ac('chi_b2', 'chiclayo', 'B', 'rec', '{rshort} se pone seca.', [
   ['Ay no seas desconfiada, es para ver tu presencia nomás'],
   ['Si no quieres hay otras chicas esperando el cupo, tú verás', 'presion']
 ],
@@ -1423,7 +1463,7 @@ ac('chi_bc1', 'chiclayo', 'BC', 'rec', 'El jueves en la noche llega otro mensaje
   { l: 'Lo pienso con {conf}', tell: true, tags: ['D'], go: 'chi_bc2', gap: 0 },
   { l: 'Ya, ahí estaré', meet: true, fx: { s: 6 } });
 
-ac('chi_bc2', 'chiclayo', 'BC', 'rec', 'Rosa vuelve a escribir antes de que decidas.', [
+ac('chi_bc2', 'chiclayo', 'BC', 'rec', '{rshort} vuelve a escribir antes de que decidas.', [
   ['¿Y? ¿Confirmas? El bus no espera'],
   ['Si te echas para atrás le quitas el cupo a otra chica', 'presion']
 ],
@@ -1436,14 +1476,14 @@ ac('chi_re', 'chiclayo', 'E', 'rec', 'Semanas después, otra cuenta te escribe.'
 ],
   { l: 'Bloqueo otra vez', tags: ['Ac'] },
   { l: 'Reporto la cuenta y le cuento a {conf}', report: true, tell: true, tags: ['Re'] },
-  { kind: 'after', chatName: 'Empleos Norte Perú' });
+  { kind: 'after', chatName: '{rre}' });
 
 card('chi_meet', { kind: 'ending', title: 'Aquí paramos', who: 'self',
   text: 'Es viernes, 6 pm, y estás en el terminal con tu mochila. Nadie en tu casa sabe dónde estás.', L: NEXT, R: NEXT });
 card('chi_sup', { kind: 'support', who: 'conf',
   text: 'Suena tu celular. Es {conf}: «¿Dónde estás? {friend} me contó lo del trabajo.» Sales de la fila y esperas donde hay gente.', L: NEXT, R: NEXT });
 
-memory('mem_cut_chiclayo', 'm_cut_chiclayo', 'prev',
+memory('mem_cut_chiclayo', 'm_cutlate_chiclayo', 'prev',
   '{memname} te cuenta que una vez le ofrecieron chamba de mesera en Chiclayo. «Lo raro fue que pedían foto de cuerpo entero.»',
   { l: 'Qué miedo', fx: { s: -2 } },
   { l: 'Si me pasa, te aviso', fx: { f: 3 }, radar: 1, tags: ['E0'] });
@@ -1462,17 +1502,34 @@ card('chi_warn', { kind: 'after', after: 'warn', arc: 'chiclayo', who: 'amiga',
   text: '{friend} comenta en el mismo grupo de empleos: «¿Chiclayo? Yo me animo.»',
   L: { l: 'No es mi problema', fx: { a: -3 } },
   R: { l: 'Le escribo al privado: «A mí me escribió esa cuenta. No tiene dirección ni restaurante»', warn: true, fx: { a: 4 }, tags: ['Re'] } });
-memory('mem_cut_chiclayo_2', 'm_cut_chiclayo', 'prev',
+memory('mem_cut_chiclayo_2', 'm_cutcap_chiclayo', 'prev',
   '{memname} todavía guarda la captura del anuncio de Chiclayo. «S/ 2,500 sin experiencia. Nadie paga eso por atender mesas.»',
   { l: 'Ya, ya', fx: { s: 1 } },
   { l: 'Me la pasas', radar: 1, fx: { f: 2 }, tags: ['E0'] });
+
+// Memory by depth: what a girl who cut at the first message, or after
+// looking the restaurant up, can tell (v0.4 fix: no memory claims more than
+// she lived).
+memory('mem_cut_chiclayo_3', 'm_cutA_chiclayo', 'prev',
+  '{memname} te cuenta que una vez le escribieron de un grupo de empleos: mesera en Chiclayo, S/ 2,500 sin experiencia. «Ni respondí. Nadie paga eso por atender mesas.»',
+  { l: 'Yo sí le hubiera preguntado', fx: { s: 2 } },
+  { l: 'Si me escriben, hago igual', radar: 1, fx: { f: 2 }, tags: ['E0'] });
+memory('mem_cut_chiclayo_4', 'm_cutAB_chiclayo', 'prev',
+  '«Me ofrecieron chamba de mesera en Chiclayo y busqué el restaurante», te cuenta {memname}. «No existía. Ahí corté.»',
+  { l: 'Qué raro', fx: { s: -1 } },
+  { l: 'Yo también lo buscaría', radar: 1, fx: { a: 2 }, tags: ['E0'] });
 
 ;
 /* Plata por fotos: money for photos on Instagram, Yape in advance, requests
  * escalate, then a threat to share. Adapted from cases/02_fotos.json. */
 arc('fotos', {
   title: 'Plata por fotos', channel: 'instagram',
-  recruiter: { name: 'bruno.promos', skin: '#a26e48', hair: '#1d140e', style: 'cap', shirt: '#1f2a44', bg: '#e2e5ec' },
+  recruiter: { name: 'bruno.promos', names: [
+    { name: 'bruno.promos', re: 'promos.bruno2' },
+    { name: 'moda.urbana.pe', re: 'modaurbana.pe2' },
+    { name: 'luxe_closet.pe', re: 'luxecloset_oficial' },
+    { name: 'tienda.brillo', re: 'brillo.tienda2' }],
+  skin: '#a26e48', hair: '#1d140e', style: 'cap', shirt: '#1f2a44', bg: '#e2e5ec' },
   start: 'fot_antes', recontact: 'fot_re', meetCard: 'fot_meet', supportCard: 'fot_sup',
   recall: 'casi fue a una «sesión de fotos» en un departamento',
   exits: [
@@ -1512,7 +1569,7 @@ ac('fot_ab2', 'fotos', 'AB', 'rec', 'Le preguntas por la marca. La buscas y no l
   { l: 'Le devuelvo su plata y corto', cut: true, fx: { p: -8 }, tags: ['As', 'Ac'] },
   { l: 'Igual le paso mi número', go: 'fot_b1', fx: { p: 8 } });
 
-ac('fot_b1', 'fotos', 'B', 'rec', 'Ahora bruno.promos te escribe al WhatsApp.', [
+ac('fot_b1', 'fotos', 'B', 'rec', 'Ahora {rshort} te escribe al WhatsApp.', [
   ['la primera es con la ropa puesta nomás, tranqui'],
   ['pero el cliente paga más si son en ropa interior, S/ 150', 'sube'],
   ['y ya te pagué, no me vas a dejar mal ¿no?', 'deuda']
@@ -1541,25 +1598,36 @@ ac('fot_bc2', 'fotos', 'BC', 'rec', 'Vuelve a escribir.', [
   { l: 'No voy y guardo todo', cut: true, capture: true, tags: ['D', 'Ac'] },
   { l: 'Voy para que no me exponga', meet: true });
 
-ac('fot_re', 'fotos', 'E', 'rec', 'Dos semanas después te sigue otra cuenta.', [
+// If she never sent a photo, the threat is a bluff, and the card says so.
+ac('fot_re', 'fotos', 'E', 'rec', 'Dos semanas después te sigue otra cuenta. Tú nunca le mandaste ninguna foto.', [
   ['oe, ¿por qué me bloqueaste?'],
   ['todavía tengo tus fotos', 'amenaza']
 ],
-  { l: 'Le pago para que las borre', fx: { p: -8 }, story: 'amenaza', storyIf: 'sent' },
+  { l: 'Le pago para que las borre', fx: { p: -8 }, paid: true, story: 'amenaza', storyIf: 'sent', go: 'fot_pago', gap: 0 },
   { l: 'No pago nada: reporto y le cuento a {conf}', report: true, tell: true, tags: ['Re'] },
-  { kind: 'after', chatName: 'promos.bruno2' });
+  { kind: 'after', chatName: '{rre}', textIf: { sent: 'Dos semanas después te sigue otra cuenta.' } });
+
+// Paying a bluff: the account asks for more right away.
+ac('fot_pago', 'fotos', 'E', 'rec', 'Le yapeaste. Al rato te vuelve a escribir.', [
+  ['sys:Le enviaste S/ 20 por Yape'],
+  ['ya vi que sí pagas jaja'],
+  ['ahora S/ 50 o las paso a tu salón', 'amenaza']
+],
+  { l: 'Le pago otra vez', fx: { p: -10, s: -3 } },
+  { l: 'Ya no pago: capturo, bloqueo y le cuento a {conf}', capture: true, tell: true, radar: 1, tags: ['Ac', 'Re'] },
+  { kind: 'step', chatName: '{rre}' });
 
 card('fot_meet', { kind: 'ending', title: 'Aquí paramos', who: 'self',
   text: 'Te mandó la ubicación de un «estudio» en un departamento. Estás en la puerta del edificio.', L: NEXT, R: NEXT });
 card('fot_sup', { kind: 'support', who: 'amiga',
   text: '{friend} estaba siguiendo tu ubicación y llega corriendo. «No entres. Vamos donde tu familia con las capturas y llamamos a la Línea 100.»', L: NEXT, R: NEXT });
 
-memory('mem_cut_fotos', 'm_cut_fotos', 'prev',
+memory('mem_cut_fotos', 'm_cutx_fotos', 'prev',
   '{memname} te cuenta que una cuenta le yapeó plata por fotos. «Ese adelanto era para que sintiera que le debía.»',
   { l: 'Yo no caería', fx: { s: 2 } },
   { l: 'Lo voy a recordar', radar: 1, fx: { f: 3 }, tags: ['E0'] });
 memory('mem_meet_fotos', 'm_meet_fotos', 'prev',
-  '«Me amenazó con mostrar mis fotos y casi voy», te dice {memname}. «La culpa era de él, no mía.»',
+  '«Me amenazó con contarle a todos que me había pagado, y casi voy», te dice {memname}. «La culpa era de él, no mía.»',
   { l: 'Qué horrible', fx: { s: -2 } },
   { l: 'Si me pasa, no pago y te cuento', fx: { f: 4 }, radar: 1, tags: ['E0'] });
 
@@ -1573,10 +1641,16 @@ card('fot_warn', { kind: 'after', after: 'warn', arc: 'fotos', who: 'grupo',
   text: 'En el salón una chica cuenta que una marca le ofreció S/ 50 por foto y ya le yapearon.',
   L: { l: 'Me callo', fx: { a: -2 } },
   R: { l: '«A mí también. Primero mandan plata, después piden más»', warn: true, fx: { a: 4 }, tags: ['Re'] } });
-memory('mem_cut_fotos_2', 'm_cut_fotos', 'prev',
+memory('mem_cut_fotos_2', 'm_cutAB_fotos', 'prev',
   '«Si alguien te yapea sin que hayas hecho nada, devuélvelo y corta», te dice {memname}. «Así lo hice yo.»',
   { l: 'Qué exagerada', fx: { s: 1 } },
   { l: 'Lo voy a hacer igual', radar: 1, fx: { f: 2 }, tags: ['E0'] });
+
+// Memory by depth: a girl who cut at the first message never got the Yape.
+memory('mem_cut_fotos_3', 'm_cutA_fotos', 'prev',
+  '«Una cuenta me ofreció S/ 50 por foto y ni le respondí», te cuenta {memname}. «Nadie te paga por fotos sin pedirte algo después.»',
+  { l: 'Igual es plata fácil', fx: { p: 1 } },
+  { l: 'Lo voy a recordar', radar: 1, fx: { f: 2 }, tags: ['E0'] });
 
 ;
 /* El casting: a modelling agency writes using a friend's name, asks for
@@ -1584,7 +1658,12 @@ memory('mem_cut_fotos_2', 'm_cut_fotos', 'prev',
  * from cases/04_casting.json. */
 arc('casting', {
   title: 'El casting', channel: 'whatsapp',
-  recruiter: { name: 'Staff Models Perú', skin: '#c08b62', hair: '#5a2e14', style: 'short', shirt: '#e0457b', bg: '#f9dde7' },
+  recruiter: { name: 'Staff Models Perú', names: [
+    { name: 'Staff Models Perú', re: 'Staff Models Lima' },
+    { name: 'Glam Faces Norte', re: 'Glam Faces Lima' },
+    { name: 'Brillo Casting Norte', re: 'Brillo Casting Lima' },
+    { name: 'Rostro Nuevo Talentos', re: 'Rostro Nuevo Lima' }],
+  skin: '#c08b62', hair: '#5a2e14', style: 'short', shirt: '#e0457b', bg: '#f9dde7' },
   start: 'cas_antes', recontact: 'cas_re', meetCard: 'cas_meet', supportCard: 'cas_sup',
   recall: 'casi fue sola a un «casting» en un departamento',
   exits: [
@@ -1603,7 +1682,7 @@ ac('cas_antes', 'casting', 'antes', 'grupo',
 
 ac('cas_a', 'casting', 'A', 'rec', 'Te escribe un número que no tienes guardado.', [
   ['Holaa, {friend} nos pasó tu perfil', 'referida'],
-  ['Somos Staff Models Perú. Este sábado hay casting para una campaña de ropa y pagamos S/ 300 por sesión', 'pago'],
+  ['Somos {recruiter}. Este sábado hay casting para una campaña de ropa y pagamos S/ 300 por sesión', 'pago'],
   ['No necesitas experiencia, tienes el look']
 ],
   { l: 'No me interesa', cut: true, tags: ['R', 'Ac'] },
@@ -1653,14 +1732,14 @@ ac('cas_re', 'casting', 'E', 'rec', 'Un mes después, otra «agencia» te escrib
 ],
   { l: 'Bloqueo', tags: ['Ac'] },
   { l: 'Reporto y le aviso a {friend}', report: true, warn: true, tags: ['Re'] },
-  { kind: 'after', chatName: 'Staff Models Lima' });
+  { kind: 'after', chatName: '{rre}' });
 
 card('cas_meet', { kind: 'ending', title: 'Aquí paramos', who: 'self',
   text: 'Sábado, 4 pm. Estás frente al departamento del casting. Viniste sola, como te pidieron.', L: NEXT, R: NEXT });
 card('cas_sup', { kind: 'support', who: 'conf',
   text: '{conf} te llama justo cuando vas a tocar el timbre. «Sal de ahí, voy para allá.» Esperas en la bodega de la esquina hasta que llega.', L: NEXT, R: NEXT });
 
-memory('mem_cut_casting', 'm_cut_casting', 'prev',
+memory('mem_cut_casting', 'm_cutAB_casting', 'prev',
   '«Me escribió una agencia usando el nombre de una amiga», te cuenta {memname}. «Le pregunté a ella y no los conocía.»',
   { l: 'Qué raro', fx: { s: -2 } },
   { l: 'Yo también preguntaría', radar: 1, fx: { a: 2 }, tags: ['E0'] });
@@ -1679,10 +1758,16 @@ card('cas_warn', { kind: 'after', after: 'warn', arc: 'casting', who: 'amiga',
   text: '{friend} te cuenta que le escribió una agencia diciendo que tú le pasaste su perfil.',
   L: { l: 'Yo no fui, allá ella', fx: { a: -3 } },
   R: { l: '«Yo no te pasé nada. Usan nombres de amigas para que confíes»', warn: true, fx: { a: 4 }, tags: ['Re'] } });
-memory('mem_cut_casting_2', 'm_cut_casting', 'prev',
-  '«Una agencia de verdad tiene dirección y no te cita en un departamento», te dice {memname}. «La busqué y no existía.»',
+memory('mem_cut_casting_2', 'm_cutBC_casting', 'prev',
+  '«Una agencia de verdad tiene dirección y no te pide ir sola a un departamento», te dice {memname}. «A mí me citaron así y no fui.»',
   { l: 'Ya sé', fx: { s: 1 } },
   { l: 'La busco también', radar: 1, fx: { f: 2 }, tags: ['E0'] });
+
+// Memory by depth: a girl who cut at the first message.
+memory('mem_cut_casting_3', 'm_cutA_casting', 'prev',
+  '«Me escribió una agencia diciendo que una amiga les pasó mi perfil», te cuenta {memname}. «No respondí. Usar el nombre de una amiga es para que confíes.»',
+  { l: 'A mí me encantaría un casting', fx: { s: 2 } },
+  { l: 'Si me pasa, le pregunto a mi amiga', radar: 1, fx: { a: 2 }, tags: ['E0'] });
 
 ;
 /* Beca en Lima: a grant she never applied for, travel before papers, the
@@ -1690,7 +1775,12 @@ memory('mem_cut_casting_2', 'm_cut_casting', 'prev',
  * cases/06_beca.json. */
 arc('beca', {
   title: 'Beca en Lima', channel: 'facebook',
-  recruiter: { name: 'Fundación Futuro Joven', skin: '#c08b62', hair: '#3a2416', style: 'bun', shirt: '#2f6db5', bg: '#dde8f6' },
+  recruiter: { name: 'Fundación Futuro Joven', names: [
+    { name: 'Fundación Futuro Joven', short: 'Futuro Joven', re: 'Becas Perú Joven' },
+    { name: 'Fundación Brisa Norteña', short: 'Brisa Norteña', re: 'Becas Brisa Norteña' },
+    { name: 'Fundación Alto Vuelo Joven', short: 'Alto Vuelo', re: 'Becas Alto Vuelo' },
+    { name: 'Fundación Puerta Abierta Sur', short: 'Puerta Abierta', re: 'Becas Puerta Abierta' }],
+  skin: '#c08b62', hair: '#3a2416', style: 'bun', shirt: '#2f6db5', bg: '#dde8f6' },
   start: 'bec_antes', recontact: 'bec_re', meetCard: 'bec_meet', supportCard: 'bec_sup',
   recall: 'casi se subió a una movilidad a Lima por una beca que no existía',
   exits: [
@@ -1708,7 +1798,7 @@ ac('bec_antes', 'beca', 'antes', 'tutora',
   { textIf: { 'bi:t_sue_beca': 'Llevas semanas leyendo sobre Beca 18. «Tienes buenas notas», te dice la miss, «pero esa convocatoria es difícil.»' } });
 
 ac('bec_a', 'beca', 'A', 'rec', 'Te llega un mensaje lleno de emojis de fiesta.', [
-  ['¡Felicidades! Fuiste preseleccionada para la Beca Futuro Joven 2026', 'premio'],
+  ['¡Felicidades! Fuiste preseleccionada para la Beca {rshort} 2026', 'premio'],
   ['Incluye estudios en un instituto de Lima, cuarto y trabajo de medio tiempo', 'todo'],
   ['Solo tienes que confirmar tus datos hoy', 'beca_urgencia']
 ],
@@ -1761,7 +1851,7 @@ ac('bec_re', 'beca', 'E', 'rec', 'Al mes, otra página te escribe.', [
 ],
   { l: 'Bloqueo', tags: ['Ac'] },
   { l: 'Reporto y le cuento a la miss', report: true, tell: true, tags: ['Re'] },
-  { kind: 'after', chatName: 'Becas Perú Joven' });
+  { kind: 'after', chatName: '{rre}' });
 
 card('bec_meet', { kind: 'ending', title: 'Aquí paramos', who: 'self',
   text: 'Domingo, 5 am. La movilidad está en la esquina, con otras chicas adentro. Apagaste tu celular, como te dijeron.', L: NEXT, R: NEXT });
@@ -1784,7 +1874,7 @@ card('bec_cap', { kind: 'after', after: 'cap', arc: 'beca', who: 'celular',
   L: { l: 'Lo borro', fx: { s: -1 } },
   R: { l: 'Hago captura del correo y del perfil, y lo reporto como estafa', capture: true, radar: 1, tags: ['Ac'] } });
 card('bec_warn', { kind: 'after', after: 'warn', arc: 'beca', who: 'grupo',
-  text: 'En el grupo de la promo comparten el anuncio de la Beca Futuro Joven: «¿Alguien postuló?»',
+  text: 'En el grupo de la promo comparten el anuncio de la Beca {rshort}: «¿Alguien postuló?»',
   L: { l: 'No digo nada', fx: { a: -2 } },
   R: { l: '«Nadie postuló porque no existe. Las becas de verdad están en el Pronabec»', warn: true, fx: { a: 4 }, tags: ['Re'] } });
 memory('mem_cut_beca_2', 'm_cut_beca', 'prev',
@@ -1798,7 +1888,12 @@ memory('mem_cut_beca_2', 'm_cut_beca', 'prev',
  * Adapted from cases/03_freefire.json. */
 arc('freefire', {
   title: 'Dúo en Free Fire', channel: 'freefire',
-  recruiter: { name: 'Kevin_FF', skin: '#a26e48', hair: '#1d140e', style: 'cap', shirt: '#c0392b', bg: '#f6dcd8' },
+  recruiter: { name: 'Kevin_FF', names: [
+    { name: 'Kevin_FF', short: 'Kevin', re: 'Kev1n_FF' },
+    { name: 'Dark_Zeus', re: 'DarkZeus_2' },
+    { name: 'Lobo_Sniper', re: 'LoboSniper_07' },
+    { name: 'Rayo.FF', re: 'Rayo.FF2' }],
+  skin: '#a26e48', hair: '#1d140e', style: 'cap', shirt: '#c0392b', bg: '#f6dcd8' },
   start: 'ff_antes', recontact: 'ff_re', meetCard: 'ff_meet', supportCard: 'ff_sup',
   recall: 'casi se subió al carro de un chico que conoció en Free Fire',
   exits: [
@@ -1825,21 +1920,21 @@ ac('ff_a', 'freefire', 'A', 'rec', 'Después de una partida, un jugador te escri
   { l: 'Jaja ya, dale', go: 'ff_ab1', fx: { a: 6 }, set: ['gift_any', 'gift_freefire'] });
 
 ac('ff_ab1', 'freefire', 'AB', 'rec', 'Al día siguiente juegan cuatro partidas seguidas.', [
-  ['sys:Kevin_FF te envió 100 diamantes'],
+  ['sys:{recruiter} te envió 100 diamantes'],
   ['tengo 17 como tú jaja', 'edad'],
   ['pásame tu WhatsApp pa coordinar, el chat del juego es feo', 'freefire_privado']
 ],
   { l: 'Mejor seguimos en el juego', go: 'ff_ab2', gap: 0, radar: 1, tags: ['As'] },
   { l: 'Ya, te paso mi número', go: 'ff_b1', fx: { a: 6 } });
 
-ac('ff_ab2', 'freefire', 'AB', 'rec', 'Kevin insiste.', [
+ac('ff_ab2', 'freefire', 'AB', 'rec', '{rshort} insiste.', [
   ['ay ya, pero el juego no deja mandar audios'],
   ['¿no confías en mí?']
 ],
   { l: 'No. Chau', cut: true, tags: ['Ac'] },
   { l: 'Ya, toma mi número', go: 'ff_b1' });
 
-ac('ff_b1', 'freefire', 'B', 'rec', 'Kevin te escribe todas las noches.', [
+ac('ff_b1', 'freefire', 'B', 'rec', '{rshort} te escribe todas las noches.', [
   ['eres la más linda del server, en serio', 'halago'],
   ['mándame una foto tuya, pero solo para mí, no le digas a nadie', 'foto']
 ],
@@ -1853,14 +1948,14 @@ ac('ff_b2', 'freefire', 'B', 'rec', 'Te contesta con un audio y luego escribe.',
   { l: 'No me gusta cómo me hablas', cut: true, how: 'bloquea', tags: ['Ac'] },
   { l: 'Se lo cuento a {conf}', tell: true, tags: ['D'], go: 'ff_bc1' });
 
-ac('ff_bc1', 'freefire', 'BC', 'rec', 'Un viernes, Kevin propone algo nuevo.', [
+ac('ff_bc1', 'freefire', 'BC', 'rec', 'Un viernes, {rshort} propone algo nuevo.', [
   ['vamos a vernos el sábado'],
   ['te recojo en la plaza, mi primo tiene carro', 'encuentro']
 ],
   { l: 'Lo pienso con {conf}', tell: true, tags: ['D'], go: 'ff_bc2', gap: 0 },
   { l: 'Ya, ahí nos vemos', meet: true, fx: { a: 4 } });
 
-ac('ff_bc2', 'freefire', 'BC', 'rec', 'Kevin no espera tu respuesta.', [
+ac('ff_bc2', 'freefire', 'BC', 'rec', '{rshort} no espera tu respuesta.', [
   ['¿vienes o no? ya le dije a mi primo']
 ],
   { l: 'No voy a ir', cut: true, tags: ['D', 'Ac'] },
@@ -1872,14 +1967,14 @@ ac('ff_re', 'freefire', 'E', 'rec', 'Una semana después, una cuenta nueva te ag
 ],
   { l: 'Bloqueo otra vez', tags: ['Ac'] },
   { l: 'Lo reporto en el juego y le cuento a {conf}', report: true, tell: true, tags: ['Re'] },
-  { kind: 'after', chatName: 'Kev1n_FF' });
+  { kind: 'after', chatName: '{rre}' });
 
 card('ff_meet', { kind: 'ending', title: 'Aquí paramos', who: 'self',
   text: 'Sábado en la plaza. Se estaciona un carro con dos hombres mayores. Uno te saluda por tu nombre de usuario.', L: NEXT, R: NEXT });
 card('ff_sup', { kind: 'support', who: 'conf',
   text: '{conf} te había preguntado adónde ibas y vino detrás de ti. Te toma del brazo: «Vámonos. Ese no tiene 17.»', L: NEXT, R: NEXT });
 
-memory('mem_cut_freefire', 'm_cut_freefire', 'prev',
+memory('mem_cut_freefire', 'm_cutx_freefire', 'prev',
   '«Un chico del Free Fire me regalaba diamantes y quería mi WhatsApp», te cuenta {memname}. «Lo bloqueé y ya.»',
   { l: 'Yo juego con quien quiera', fx: { a: 2 } },
   { l: 'Buena, yo haría igual', radar: 1, fx: { a: 2 }, tags: ['E0'] });
@@ -1903,13 +1998,24 @@ memory('mem_cut_freefire_2', 'm_cut_freefire', 'prev',
   { l: 'Ya sé hacerlo', fx: { s: 1 } },
   { l: 'Lo pongo ahorita', radar: 1, fx: { f: 2 }, tags: ['E0'] });
 
+// Memory by depth: a girl who said no to the first gift.
+memory('mem_cut_freefire_3', 'm_cutA_freefire', 'prev',
+  '«Un chico del Free Fire me ofreció diamantes por jugar dúo», te cuenta {memname}. «No acepté. Después le escribió lo mismo a mi prima, palabra por palabra.»',
+  { l: 'Yo sí los aceptaba', fx: { a: 2 } },
+  { l: 'Buena, yo haría igual', radar: 1, fx: { a: 1 }, tags: ['E0'] });
+
 ;
 /* Anfitriona en Mazuko: a TikTok ad for a "host" in a mining-corridor bar,
  * paid by "fichas", ticket deducted from pay, they keep the DNI, lie to your
  * mother. Adapted from cases/05_maldonado.json (PROMSEX 2025). */
 arc('anfitriona', {
   title: 'Anfitriona en Mazuko', channel: 'tiktok',
-  recruiter: { name: 'Trabajo Mazuko', skin: '#9c6a45', hair: '#1d140e', style: 'short', shirt: '#2e7d4f', bg: '#dcefe3' },
+  recruiter: { name: 'Trabajo Mazuko', names: [
+    { name: 'Trabajo Mazuko', re: 'Trabajo Mazuko 2' },
+    { name: 'Chamba Selva Ya', re: 'Chamba Selva Ya 2' },
+    { name: 'Empleos Corredor Minero', re: 'Corredor Minero Empleos' },
+    { name: 'Local La Ruta Oficial', re: 'La Ruta Oficial 2' }],
+  skin: '#9c6a45', hair: '#1d140e', style: 'short', shirt: '#2e7d4f', bg: '#dcefe3' },
   start: 'anf_antes', recontact: 'anf_re', meetCard: 'anf_meet', supportCard: 'anf_sup',
   recall: 'casi se subió a una camioneta rumbo a un local en Mazuko',
   exits: [
@@ -1980,14 +2086,14 @@ ac('anf_re', 'anfitriona', 'E', 'rec', 'Tres semanas después aparece otro video
 ],
   { l: 'Bloqueo', tags: ['Ac'] },
   { l: 'Reporto el video y le cuento a {conf}', report: true, tell: true, tags: ['Re'] },
-  { kind: 'after', chatName: 'Trabajo Mazuko 2' });
+  { kind: 'after', chatName: '{rre}' });
 
 card('anf_meet', { kind: 'ending', title: 'Aquí paramos', who: 'self',
   text: 'Jueves, 9 pm. En el paradero te espera una camioneta con un señor que no conoces. A tu mamá le dijiste que era trabajo en una tienda.', L: NEXT, R: NEXT });
 card('anf_sup', { kind: 'support', who: 'amiga',
   text: '{friend} pasa en mototaxi y te ve. «¿Con quién te vas?» Se baja, te lleva a su casa y llaman juntas a la Línea 100.', L: NEXT, R: NEXT });
 
-memory('mem_cut_anfitriona', 'm_cut_anfitriona', 'prev',
+memory('mem_cut_anfitriona', 'm_cutx_anfitriona', 'prev',
   '{memname} te cuenta que le ofrecieron ser anfitriona en Mazuko. «Ganar por fichas es tomar con hombres. No es trabajo para nosotras.»',
   { l: 'Pero pagan bien', fx: { p: 2 } },
   { l: 'Gracias por decirme', radar: 1, fx: { f: 3 }, tags: ['E0'] });
@@ -2092,7 +2198,7 @@ card('alx_meet', { kind: 'ending', title: 'Aquí paramos', who: 'self',
 card('alx_sup', { kind: 'support', who: 'conf',
   text: '{conf} te encuentra en el terminal, con tu foto en el celular. «Nadie te va a castigar. Vámonos a la casa y lo vemos juntas.»', L: NEXT, R: NEXT });
 
-memory('mem_cut_alex', 'm_cut_alex', 'prev',
+memory('mem_cut_alex', 'm_cutAB_alex', 'prev',
   '«Sam me ofreció chamba con cuarto y comida, sin apuro», te cuenta {memname}. «Lo raro era eso: todo pagado y nadie sabía el nombre del negocio.»',
   { l: 'A mí no me escribe nadie', fx: { s: 2 } },
   { l: 'Si me escribe, te aviso', fx: { a: 2 }, radar: 1, tags: ['E0'] });
@@ -2111,10 +2217,16 @@ card('alx_warn', { kind: 'after', after: 'warn', arc: 'alex', who: 'vecina',
   text: 'La vecina te cuenta que Sam también le ofreció trabajo a su sobrina, «con cuarto y comida».',
   L: { l: 'No me meto', fx: { a: -2 } },
   R: { l: '«Que pregunte el nombre del negocio y quién paga la vuelta»', warn: true, fx: { a: 3, f: 1 }, tags: ['Re'] } });
-memory('mem_cut_alex_2', 'm_cut_alex', 'prev',
+memory('mem_cut_alex_2', 'm_cutlate_alex', 'prev',
   '«Lo que parecía tranquilo era lo más raro», te dice {memname}. «Nadie me apuró porque ya tenían todo pagado.»',
   { l: 'Qué raro', fx: { s: 1 } },
   { l: 'Lo voy a recordar', radar: 1, fx: { f: 2 }, tags: ['E0'] });
+
+// Memory by depth: a girl who said no at the first message.
+memory('mem_cut_alex_3', 'm_cutA_alex', 'prev',
+  '«Sam me escribió por una chamba con cuarto y comida en otra ciudad», te cuenta {memname}. «Le dije que no me interesaba. Era demasiado fácil.»',
+  { l: 'Sam es buena gente', fx: { s: 2 } },
+  { l: 'Si me escribe, te aviso', radar: 1, fx: { a: 2 }, tags: ['E0'] });
 
 ;
 /* Pagar para entrar: a Facebook group ad for «curso + trabajo asegurado»
@@ -2125,11 +2237,16 @@ memory('mem_cut_alex_2', 'm_cut_alex', 'prev',
  * paid, so warning her is part of the arc. */
 arc('dani', {
   title: 'Pagar para entrar', channel: 'facebook', unlock: { mem: 'u_canal', gen: 2 },
-  recruiter: { name: 'Capacitaciones Selva', skin: '#9c6a45', hair: '#1d140e', style: 'short', shirt: '#5f6470', bg: '#e6e0d4' },
+  recruiter: { name: 'Capacitaciones Selva', names: [
+    { name: 'Capacitaciones Selva' },
+    { name: 'Cursos Selva Pro' },
+    { name: 'Instituto Chamba Segura' },
+    { name: 'Capacitación Ruta Pro' }],
+  skin: '#9c6a45', hair: '#1d140e', style: 'short', shirt: '#5f6470', bg: '#e6e0d4' },
   start: 'dan_antes', recontact: 'dan_re', meetCard: 'dan_meet', supportCard: 'dan_sup',
   recall: 'casi paga la inscripción de un curso que prometía trabajo asegurado',
   exits: [
-    'Si tienes que pagar para entrar, el negocio eres tú.',
+    'Si te piden pagar para entrar, desconfía: un trabajo te paga a ti.',
     'Buscar el mismo puesto en un portal de empleo o el RUC en Sunat.',
     'Leer los comentarios: si una cuenta nueva dice «es real», es otra señal.',
     'Ante la amenaza: no pagar, capturar, reportar y contarlo.'
@@ -2181,7 +2298,7 @@ ac('dan_re', 'dani', 'E', 'rec', 'Una semana después, te escribe un número des
   ['Separaste un cupo y no pagaste lo que faltaba'],
   ['Si no yapeas los S/ 100, publicamos tu DNI', 'dni_amenaza']
 ],
-  { l: 'Pago para que me dejen en paz', fx: { p: -10, s: -4 }, story: 'amenaza', storyIf: 'sent' },
+  { l: 'Pago para que me dejen en paz', fx: { p: -10, s: -4 }, paid: true, story: 'amenaza', storyIf: 'sent' },
   { l: 'Capturo, reporto el número y se lo cuento a {conf}', capture: true, report: true, tell: true, tags: ['Re'] },
   { kind: 'after' });
 
@@ -2190,12 +2307,12 @@ card('dan_meet', { kind: 'ending', title: 'Aquí paramos', who: 'self',
 card('dan_sup', { kind: 'support', who: 'conf',
   text: '{conf} sale a la puerta y le pregunta al chofer adónde va. Él se va sin responder. «Ven, lo vemos juntas.»', L: NEXT, R: NEXT });
 
-memory('mem_cut_dani', 'm_cut_dani', 'prev',
-  '«Un curso pedía S/ 100 para entrar», te cuenta {memname}. «Lo busqué en un portal y no existía. Si tienes que pagar para entrar, el negocio eres tú.»',
+memory('mem_cut_dani', 'm_cutAB_dani', 'prev',
+  '«Un curso pedía S/ 100 para entrar», te cuenta {memname}. «Lo busqué en un portal y no existía.»',
   { l: 'Yo no tengo ni para el pasaje', fx: { p: -2 } },
   { l: 'Me lo guardo', fx: { s: 2 }, radar: 1, tags: ['E0'] });
 memory('mem_meet_dani', 'm_meet_dani', 'prev',
-  '«Pagué una inscripción y casi subo a una mototaxi que me mandaron», te dice {memname}. «Lo bueno es que se lo conté a tiempo a alguien.»',
+  '«Pagué una inscripción y casi subo a una mototaxi que me mandaron», te dice {memname}. «Me pidieron ir sin compañía. Eso era lo raro.»',
   { l: 'Qué miedo', fx: { s: -2 } },
   { l: 'Gracias por contarme', fx: { a: 2 }, radar: 1, tags: ['E0'] });
 
@@ -2213,6 +2330,12 @@ memory('mem_cut_dani_2', 'm_cut_dani', 'prev',
   '{memname} te enseña a buscar el RUC de una empresa en la página de la Sunat. «Si no aparece, no existe.»',
   { l: 'Qué flojera', fx: { s: 1 } },
   { l: 'Lo pruebo con el curso', radar: 1, fx: { f: 2 }, tags: ['E0'] });
+
+// Memory by depth: a girl who did not sign up.
+memory('mem_cut_dani_3', 'm_cutA_dani', 'prev',
+  '«Un curso pedía S/ 100 para entrar y no me inscribí», te cuenta {memname}. «Si te cobran por darte chamba, ya no es chamba.»',
+  { l: 'Pero daban trabajo asegurado', fx: { s: 2 } },
+  { l: 'Me lo guardo', radar: 1, fx: { f: 2 }, tags: ['E0'] });
 
 ;
 /* Deeds («hazañas»), following reports/Desbloqueos en Reigns.md: visible
@@ -2530,9 +2653,11 @@ tstep('bi_fam_2', 'bi', 'familia', 2, 'mama',
   { l: 'Dejo el reforzamiento para ayudar', fx: { f: 5, s: -5 }, set: ['t_fam_2'] },
   { l: 'Busco una chamba los domingos', fx: { p: 3 }, set: ['t_fam_2', 't_fam_chamba'] }, prev('t_fam_1', 6));
 tstep('bi_fam_3a', 'bi', 'familia', 3, 'celular',
-  'En un grupo de empleos te ofrecen «chamba fácil los domingos, S/ 80 por día, sin experiencia». Te acuerdas de lo que contó la miss.',
+  'En un grupo de empleos te ofrecen «chamba fácil los domingos, S/ 80 por día, sin experiencia».',
   { l: 'Escribo al inbox', fx: { p: 4, s: 2 }, line: 'La familia: buscó chamba en un inbox, sin saber quién escribía.' },
-  { l: 'Mejor le pregunto a doña Gloria, que sí conozco', fx: { p: 3 }, radar: 1, tags: ['As'], line: 'La familia: consiguió chamba con doña Gloria, que la conoce.' }, prev('t_fam_chamba', 5));
+  { l: 'Mejor le pregunto a doña Gloria, que sí conozco', fx: { p: 3 }, radar: 1, tags: ['As'], line: 'La familia: consiguió chamba con doña Gloria, que la conoce.' }, prev('t_fam_chamba', 5)).textIf = {
+  // Only if she heard the miss's talk this year (d_tutora_charla).
+  oyo_charla: 'En un grupo de empleos te ofrecen «chamba fácil los domingos, S/ 80 por día, sin experiencia». Te acuerdas de lo que contó la miss.' };
 tstep('bi_fam_3b', 'bi', 'familia', 3, 'mama',
   'La junta del mercado le presta a tu mamá para mudar el puesto otra vez, a la esquina buena. «Vamos a salir de esta.»',
   { l: 'Le ayudo a pintar el letrero', fx: { f: 5, a: -2 }, line: 'La familia: el puesto volvió a la esquina buena.' },
@@ -2900,13 +3025,14 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     return {
       v: 1, profile: profileId, gen: 0, seed: (seed == null ? Date.now() : seed) | 0,
       mem: {}, history: [], collection: {}, evidence: 0, chainBroken: false,
-      deeds: {}, caught: {}, people: {}, unlockSeen: {}
+      deeds: {}, caught: {}, people: {}, unlockSeen: {}, friendsGone: [], sigSeen: {}
     };
   }
 
   // Older saves have no deed fields.
   function upgrade(game) {
-    ['deeds', 'caught', 'people', 'unlockSeen', 'echoSeen', 'afterSeen', 'climaxSeen'].forEach(function (k) { if (!game[k]) game[k] = {}; });
+    ['deeds', 'caught', 'people', 'unlockSeen', 'echoSeen', 'afterSeen', 'climaxSeen', 'sigSeen'].forEach(function (k) { if (!game[k]) game[k] = {}; });
+    if (!game.friendsGone) game.friendsGone = [];
     return game;
   }
 
@@ -2954,10 +3080,37 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     return (u.gen != null && game.gen >= u.gen) || !!(u.mem && mem[u.mem]);
   }
 
-  // The deeds on show for this girl: the first ones of the list not done yet.
+  // The order deeds go on show in this story: the first trio is fixed (the
+  // first girl learns the basics), the rest turn with the story's seed, so
+  // the deeds that come last in the list (and their branches) also get to
+  // open early in some stories.
+  function deedOrder(game, C) {
+    var list = (C.deeds || []).filter(function (d) { return d.test !== 'chain'; });
+    var n = C.DEEDS_ACTIVE || 3;
+    var head = list.slice(0, n), rest = list.slice(n);
+    var k = rest.length ? Math.abs(game.seed | 0) % rest.length : 0;
+    return head.concat(rest.slice(k), rest.slice(0, k));
+  }
+  // The deeds on show for this girl: the first ones of the order not done yet.
   function activeDeeds(game, C) {
-    return (C.deeds || []).filter(function (d) { return !game.deeds[d.id] && d.test !== 'chain'; })
+    return deedOrder(game, C).filter(function (d) { return !game.deeds[d.id]; })
       .slice(0, C.DEEDS_ACTIVE || 3).map(function (d) { return d.id; });
+  }
+
+  // Her best friend this year: the profile's friend, or the next one of the
+  // cast if an earlier friend left with an offer (story «amiga»).
+  function friendOf(C, run) {
+    var profile = C.profiles[run.profile];
+    var list = [(profile.cast || {}).amiga || { name: profile.friend, short: profile.friend }].concat(profile.altFriends || []);
+    return list[Math.min(run.friendIdx || 0, list.length - 1)];
+  }
+  // The recruiter's name for this girl: every girl of the story meets the
+  // offer under a different account (arc.recruiter.names, one per girl).
+  function recruiterOf(C, run, arcId) {
+    var r = C.arcs[arcId].recruiter;
+    var names = r.names || [];
+    var n = names.length ? names[run.gen % names.length] : { name: r.name };
+    return { name: n.name, short: n.short || n.name, re: n.re || n.name };
   }
 
   function newRun(game, C) {
@@ -2976,7 +3129,8 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       unlockSeen: Object.assign({}, game.unlockSeen), newCards: {}, people: {},
       themeAt: {}, flagWeek: {}, guiltShown: false, memShown: 0, lastMeta: false, toast: [], echoSeen: Object.assign({}, game.echoSeen), afterSeen: Object.assign({}, game.afterSeen), climaxSeen: Object.assign({}, game.climaxSeen),
       evidence: false, over: null, endQueue: [], done: false, current: null,
-      seed: (game.seed + game.gen * 7919) | 0
+      seed: (game.seed + game.gen * 7919) | 0,
+      friendIdx: game.friendsGone.length, goneFriend: game.friendsGone[game.friendsGone.length - 1] || null
     };
     // Earlier girls' lessons start her radar a little higher: a cut, or a
     // meeting only if she told someone afterwards (what is inherited is what
@@ -3065,7 +3219,13 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
             p.echoed = true;
             // The version the earlier girls of the chain have not heard comes first.
             var echo = C.cards.filter(function (c) { return echoOf(c) === p.arc && !run.seen[c.id] && eligible(run, c); })
-              .sort(function (x, y) { var e = run.echoSeen || {}; return (e[x.id] ? 1 : 0) - (e[y.id] ? 1 : 0); })[0];
+              .sort(function (x, y) {
+                // Unheard first; then the version written for what she lived
+                // (cut at a given moment, with captures) over the general one.
+                var e = run.echoSeen || {};
+                function rank(c) { return (e[c.id] ? 2 : 0) + (/^m_(cut|meet)_/.test(c.when.mem[0]) ? 1 : 0); }
+                return rank(x) - rank(y);
+              })[0];
             if (echo) return { id: echo.id };
           }
           p.started = true;
@@ -3116,7 +3276,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     run.active = arcId;
     run.attempts[arcId] = {
       arc: arcId, reached: -1, cut: null, withSomeone: false, capture: false,
-      report: false, toldAfter: false, warned: false, letters: {}
+      report: false, toldAfter: false, warned: false, paid: false, letters: {}
     };
   }
 
@@ -3203,6 +3363,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
         if (att.capture) run.evidence = true;
       }
       if (ch.warn) att.warned = true;
+      if (ch.paid) att.paid = true;
       if (ch.tell) {
         if (MOMENTS.indexOf(c.moment) >= 0) att.withSomeone = true;
         else att.toldAfter = true;
@@ -3323,7 +3484,8 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     var arc = C.arcs[arcId];
     if (key === 'recontact') return arc.recontact;
     if (key === 'guilt') {
-      if (run.guiltShown || !(att.reached >= 2 || run.flags.sent)) return null;
+      // Only if she went far and has not told anyone about this offer.
+      if (run.guiltShown || !(att.reached >= 2 || run.flags.sent) || att.withSomeone || att.toldAfter) return null;
       run.guiltShown = true;
     }
     // A friend already warned in her subplot is not warned again; a warning
@@ -3414,8 +3576,10 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     var arc = arcId && C.arcs[arcId];
     return {
       name: run.girl, conf: conf.short || conf.name || 'alguien', prev: run.prev || 'tu prima', memname: run.prev || 'tu prima',
-      friend: profile.friend, city: profile.city,
-      recruiter: arc ? arc.recruiter.name : 'esa cuenta'
+      friend: friendOf(C, run).short, gonefriend: run.goneFriend || '', city: profile.city,
+      recruiter: arc ? recruiterOf(C, run, arcId).name : 'esa cuenta',
+      rshort: arc ? recruiterOf(C, run, arcId).short : 'esa cuenta',
+      rre: arc ? recruiterOf(C, run, arcId).re : 'otra cuenta'
     };
   }
   // «{conf} te dice» starts with «tu mamá»: capitalise the start of the text.
@@ -3426,11 +3590,22 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
 
   function character(run, C, who, arcId) {
     var profile = C.profiles[run.profile];
-    if (who === 'rec' && arcId) return C.arcs[arcId].recruiter;
+    if (who === 'rec' && arcId) return Object.assign({}, C.arcs[arcId].recruiter, { name: recruiterOf(C, run, arcId).name });
+    if (who === 'amiga') return friendOf(C, run);
     if (who === 'girl' || who === 'self') return girlOf(C, run.profile, run.gen);
     if (who === 'prev') return run.gen > 0 ? girlOf(C, run.profile, run.gen - 1) : girlOf(C, run.profile, 1);
     if (who === 'conf') who = run.conf;
     return (profile.cast && profile.cast[who]) || C.characters[who] || { name: who };
+  }
+
+  // A memory card shows the face of the girl it names ({memname}), who may
+  // be older than the girl just before.
+  function whoOf(run, C, c, arcId, memName) {
+    if (c.kind === 'memory' && c.who === 'prev' && memName) {
+      var g = C.profiles[run.profile].girls.filter(function (x) { return x.name === memName; })[0];
+      if (g) return g;
+    }
+    return character(run, C, c.who, arcId);
   }
 
   function preview(run, C, side) {
@@ -3480,11 +3655,11 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       }),
       threads: threadState(run, C),
       toast: (run.toast || []).map(function (id) { return deedView(C, id, run.girl); }),
-      who: character(run, C, c.who, arcId), whoLabel: c.whoLabel ? fill(c.whoLabel, v) : null,
+      who: whoOf(run, C, c, arcId, memName), whoLabel: c.whoLabel ? fill(c.whoLabel, v) : null,
       text: cap(fill(text, v)),
       chat: c.chat ? {
         channel: c.chat.channel || (arc && arc.channel),
-        name: fill(c.chat.name || (arc && arc.recruiter.name), v),
+        name: fill(c.chat.name || v.recruiter, v),
         lines: c.chat.lines.map(function (ln) {
           var t = fill(ln[0], v);
           var sys = t.indexOf('sys:') === 0;
@@ -3593,6 +3768,41 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     };
   }
 
+  // What the four girls of this story achieved, counted against what this
+  // story could reach (the chain-end screen): the deeds that were on show,
+  // one branch per year that had one, the signals that appeared, every
+  // offer attempt (a meeting is not a cut), and the people of her network
+  // who appear in this profile.
+  function chainSummary(game, C) {
+    upgrade(game);
+    var shown = {};
+    game.history.forEach(function (h) { (h.deedsShown || []).forEach(function (id) { shown[id] = true; }); });
+    (C.deeds || []).forEach(function (d) { if (d.test === 'chain') shown[d.id] = true; });
+    var deedIds = Object.keys(shown);
+    var branchYears = game.history.filter(function (h) { return h.branch; }).length;
+    var branchesDone = (C.branches || []).filter(function (b) {
+      return (!b.profile || b.profile.indexOf(game.profile) >= 0) && game.mem['b_' + b.key + '_done'];
+    }).length;
+    var sigs = Object.keys(game.sigSeen);
+    var atts = [];
+    game.history.forEach(function (h) { h.arcs.forEach(function (a) { if (a.reached >= 0) atts.push(a); }); });
+    var profile = C.profiles[game.profile];
+    var whoIn = {};
+    C.cards.forEach(function (c) {
+      if (c.when && c.when.profile && c.when.profile.indexOf(game.profile) < 0) return;
+      if (c.who === 'conf') profile.girls.forEach(function (g) { whoIn[g.conf] = true; });
+      else whoIn[c.who] = true;
+    });
+    var allies = (C.allies || []).filter(function (k) { return whoIn[k]; });
+    return {
+      deeds: { got: deedIds.filter(function (id) { return game.deeds[id]; }).length, total: deedIds.length },
+      branches: { got: Math.min(branchesDone, branchYears), total: branchYears },
+      signals: { got: sigs.filter(function (k) { return game.caught[k]; }).length, total: sigs.length },
+      attempts: { cut: atts.filter(function (a) { return a.cut; }).length, total: atts.length },
+      people: { got: allies.filter(function (k) { return game.people[k]; }).length, total: allies.length }
+    };
+  }
+
   /* ---------- feedback ---------- */
 
   function feedback(run, C) {
@@ -3610,7 +3820,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       return {
         arc: p.arc, title: arc.title, channel: arc.channel, reached: a.reached,
         cutAt: a.cut ? MOMENTS.indexOf(a.cut) : null, met: o.type === 'meet' && o.arc === p.arc,
-        withSomeone: a.withSomeone, capture: a.capture, report: a.report, toldAfter: a.toldAfter, warned: a.warned,
+        withSomeone: a.withSomeone, capture: a.capture, report: a.report, toldAfter: a.toldAfter, warned: a.warned, paid: a.paid,
         signals: sigs, exits: arc.exits.map(function (e) { return fill(e, v); })
       };
     });
@@ -3620,6 +3830,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     var next = girlOf(C, run.profile, run.gen + 1);
     return {
       girl: run.girl, weeks: Math.min(run.week - 1, YEAR), type: o.type, bar: o.bar || null, side: o.side || null,
+      story: o.type === 'story' ? o.id : null, friend: v.friend,
       title: fill(endCard.title || '', v), endText: cap(fill(textOf(run, endCard), v)),
       message: fill((o.type === 'bar' && C.barMessages && C.barMessages[o.bar + '_' + o.side]) ||
         (o.type === 'story' && C.storyMessages && C.storyMessages[o.id]) ||
@@ -3645,17 +3856,29 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     var o = run.over;
     var arcs = run.plan.filter(function (p) { return p.started; }).map(function (p) {
       var a = run.attempts[p.arc];
-      return { arc: p.arc, reached: a.reached, cut: a.cut, withSomeone: a.withSomeone, report: a.report, toldAfter: a.toldAfter };
+      return { arc: p.arc, reached: a.reached, cut: a.cut, withSomeone: a.withSomeone, report: a.report, toldAfter: a.toldAfter,
+        capture: a.capture, paid: a.paid };
     });
     var endCard0 = getCard(C, run, endingIds(run, C)[0]);
     var recall = o.type === 'meet' ? C.arcs[o.arc].recall : endCard0.recall;
     game.history.push({
       gen: run.gen, girl: run.girl, end: o, key: endKey(o), title: fill(endCard0.title || '', vars(run, C, o.arc)), weeks: Math.min(run.week - 1, YEAR),
-      arcs: arcs, letters: Object.keys(run.letters), recall: recall || 'pasó ese año'
+      arcs: arcs, letters: Object.keys(run.letters), recall: recall || 'pasó ese año',
+      deedsShown: run.deedsActive.slice(), branch: run.branch || null, friend: friendOf(C, run).short
     });
     arcs.forEach(function (a) {
       game.mem['m_seen_' + a.arc] = run.girl;
-      if (a.cut) game.mem['m_cut_' + a.arc] = run.girl;
+      if (a.cut) {
+        // What she actually lived, so a later memory card only tells that
+        // (memory text by depth): the moment she cut, whether she had gone
+        // past the first message, and whether she kept captures.
+        game.mem['m_cut_' + a.arc] = run.girl;
+        game.mem['m_cut' + a.cut + '_' + a.arc] = run.girl;
+        if (a.cut !== 'A') game.mem['m_cutx_' + a.arc] = run.girl;
+        if (a.cut === 'B' || a.cut === 'BC') game.mem['m_cutlate_' + a.arc] = run.girl;
+        if (a.capture) game.mem['m_cutcap_' + a.arc] = run.girl;
+      }
+      if (a.report && a.capture) game.mem.m_reportcap = run.girl;
       if (o.type === 'meet' && o.arc === a.arc) game.mem['m_meet_' + a.arc] = run.girl;
       if (a.withSomeone) game.mem.m_told = run.girl;
       if (a.toldAfter) game.mem['m_toldafter_' + a.arc] = run.girl;
@@ -3663,11 +3886,21 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       game.collection['arc_' + a.arc + '_' + (a.cut ? 'cut' : o.arc === a.arc ? 'meet' : 'open')] = true;
     });
     if (o.type === 'bar') game.mem['m_end_' + o.bar + '_' + o.side] = run.girl;
-    if (o.type === 'win') { game.mem.m_win = run.girl; game.mem['m_seen_' + endCard0.id] = run.girl; }
+    if (o.type === 'win') {
+      game.mem.m_win = run.girl; game.mem['m_seen_' + endCard0.id] = run.girl;
+      if (arcs.some(function (a) { return a.withSomeone || a.toldAfter; })) game.mem.m_wintold = run.girl;
+    }
+    // Her friend left with an offer: she does not come back for the girls
+    // after her; the next friend of the cast takes her place.
+    if (o.type === 'story' && o.id === 'amiga') {
+      upgrade(game);
+      game.friendsGone.push(friendOf(C, run).short);
+      game.mem.m_friend_gone = run.girl;
+    }
     Object.keys(run.memNew).forEach(function (k) { game.mem[k] = run.memNew[k]; });
     upgrade(game);
     Object.keys(run.deedsNew).forEach(function (k) { game.deeds[k] = run.deedsNew[k]; });
-    Object.keys(run.signals).forEach(function (k) { if (run.signals[k].caught) game.caught[k] = run.girl; });
+    Object.keys(run.signals).forEach(function (k) { game.sigSeen[k] = true; if (run.signals[k].caught) game.caught[k] = run.girl; });
     Object.keys(run.people).forEach(function (k) { game.people[k] = true; });
     Object.keys(run.unlockSeen).forEach(function (k) { game.unlockSeen[k] = true; });
     Object.keys(run.seen).forEach(function (k) {
@@ -3699,7 +3932,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     newGame: newGame, newRun: newRun, choose: choose, preview: preview, view: view,
     feedback: feedback, commitRun: commitRun, getCard: getCard, eligible: eligible,
     endKey: endKey, girlOf: girlOf, monthOf: monthOf,
-    collection: collection, activeDeeds: activeDeeds, upgrade: upgrade, arcOpen: arcOpen, unlocks: unlocks
+    collection: collection, chainSummary: chainSummary, activeDeeds: activeDeeds, deedOrder: deedOrder, upgrade: upgrade, arcOpen: arcOpen, unlocks: unlocks
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.RG = root.RG || {};
@@ -4104,16 +4337,19 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     if (a.capture) chips.push('<span class="chip good">Guardó capturas</span>');
     if (a.report) chips.push('<span class="chip good">Reportó la cuenta</span>');
     if (a.toldAfter) chips.push('<span class="chip good">Lo contó después</span>');
+    if (a.paid) chips.push('<span class="chip warn">Le pagó a quien la amenazaba: quien amenaza siempre pide más</span>');
     if (a.warned) chips.push('<span class="chip good">Avisó a otra chica</span>');
     var ch = CHANNELS[a.channel] || {};
-    var sigs = a.signals.length ? '<h4>Señales que aparecieron</h4>' + a.signals.map(function (s) {
+    // The exits come first; the signals are folded so the attempt stays short.
+    var caught = a.signals.filter(function (s) { return s.caught; }).length;
+    var sigs = a.signals.length ? '<details class="sigs"><summary>Señales que aparecieron · notó ' + caught + ' de ' + a.signals.length + '</summary>' + a.signals.map(function (s) {
       return '<div class="sig-row"><span class="mk ' + (s.caught ? 'ok' : 'miss') + '">' + (s.caught ? GLYPH.ok : GLYPH.miss) + '</span>' +
         '<span><b>' + esc(s.label) + '</b><span class="fn">' + esc(s.fn) + (s.caught ? ' · la notaste' : ' · se pasó') + '</span><br>' + esc(s.why) + '</span></div>';
-    }).join('') : '';
+    }).join('') + '</details>' : '';
     return '<div class="attempt"><div class="ch">' + esc(ch.label || a.channel) + '</div><h3>' + esc(a.title) + '</h3>' +
       '<div class="journey">' + segs + '</div><div class="journey-labels">' + labels + '</div>' + outcome +
-      (chips.length ? '<div class="chips">' + chips.join('') + '</div>' : '') + sigs +
-      '<h4>Otras salidas que tenía</h4><ul class="exits">' + a.exits.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
+      (chips.length ? '<div class="chips">' + chips.join('') + '</div>' : '') +
+      '<h4>Otras salidas que tenía</h4><ul class="exits">' + a.exits.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' + sigs + '</div>';
   }
 
   function barsLine(bars) {
@@ -4132,7 +4368,9 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       var b = barName(fb.bar);
       cause = '<p class="lead">Se rompió el equilibrio en <b>' + esc(b.name) + '</b>: ' + esc(fb.side === 'low' ? b.low : b.high).toLowerCase() + '.</p>';
     }
-    if (fb.type === 'story') cause = '<p class="lead">Este año no terminó por una barra: lo terminó la historia de las ofertas.</p>';
+    if (fb.type === 'story') cause = '<p class="lead">' + (fb.story === 'amiga'
+      ? 'Este año no terminó por una barra: lo terminó lo que pasó con ' + esc(fb.friend) + '.'
+      : 'Este año no terminó por una barra: lo terminó la historia de las ofertas.') + '</p>';
     var lit = fb.letters.filter(function (l) { return l.lit; }).length;
     var html = '<div class="screen night"><div class="fb-head"><div class="eyebrow">Tu ruta RADAR</div>' +
       '<h1 tabindex="-1" data-focus>' + esc(fb.title) + '</h1><div class="weeks">' + esc(fb.girl) + ' · ' + fb.weeks + ' de 40 semanas</div>' +
@@ -4147,7 +4385,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       (fb.chainBroken ? '<div class="fb-msg chain"><b>La cuenta cayó.</b> Las capturas y los reportes de varias chicas, una tras otra, sirvieron para que la den de baja.</div>' : '') +
       (fb.bars ? '<h2>Cómo quedaron sus barras</h2><div class="fb-bars">' + fb.bars.map(function (b) {
         return '<div class="fb-bar ' + b.state + '"><span>' + esc(b.name) + '</span><i><b style="width:' + b.value + '%"></b></i><small>' + (b.state === 'alta' ? 'muy alta' : b.state === 'baja' ? 'muy baja' : 'en equilibrio') + '</small></div>';
-      }).join('') + '</div><p class="small muted">' + esc(barsLine(fb.bars)) + '</p>' : '') +
+      }).join('') + '</div>' + (fb.type === 'story' ? '' : '<p class="small muted">' + esc(barsLine(fb.bars)) + '</p>') : '') +
       '<h2>Los intentos de este año</h2>' +
       (fb.attempts.length ? fb.attempts.map(function (a) { return attemptHtml(a, fb.moments); }).join('') : '<p class="muted">Este año no llegó a aparecer ninguna oferta.</p>') +
       (fb.deeds && fb.deeds.length ? '<h2>Hazañas de este año</h2>' + fb.deeds.map(function (d) {
@@ -4202,7 +4440,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
 
   function renderChainEnd() {
     S.screen = 'chain';
-    var g = S.game, col = E.collection(g, C), p = C.profiles[g.profile];
+    var g = S.game, col = E.chainSummary(g, C), p = C.profiles[g.profile];
     var names = g.history.map(function (h) { return h.girl; });
     var girls = g.history.map(function (h) {
       var deeds = (C.deeds || []).filter(function (d) { return g.deeds[d.id] === h.girl; }).map(function (d) { return d.name; });
@@ -4217,7 +4455,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       '<li><b>Hazañas</b> · ' + col.deeds.got + ' de ' + col.deeds.total + '</li>' +
       '<li><b>Ramas cerradas</b> · ' + col.branches.got + ' de ' + col.branches.total + '</li>' +
       '<li><b>Señales que reconocieron</b> · ' + col.signals.got + ' de ' + col.signals.total + '</li>' +
-      '<li><b>Ofertas cortadas a tiempo</b> · ' + col.routes.got + ' de ' + col.routes.total + '</li>' +
+      '<li><b>Intentos cortados antes del encuentro</b> · ' + col.attempts.cut + ' de ' + col.attempts.total + '</li>' +
       '<li><b>Personas de su red</b> · ' + col.people.got + ' de ' + col.people.total + '</li></ul>' +
       '<h2>Las chicas</h2><ul class="gen-list">' + girls + '</ul>' +
       '<p class="small muted" style="margin-top:14px">Una historia nueva empieza con otras chicas, otras ofertas y las ramas que esta no llegó a vivir.</p>' +
