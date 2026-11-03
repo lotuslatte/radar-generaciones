@@ -635,6 +635,9 @@ RG_CONTENT.characters = {
   jefa:      { name: 'Doña Gloria, del mercado', short: 'doña Gloria', skin: '#9c6a45', hair: '#2b1a10', style: 'bun', shirt: '#1b998b', bg: '#d6efec' },
   pareja:    { name: 'La pareja de tu mamá', short: 'la pareja de tu mamá', skin: '#94623f', hair: '#1d140e', style: 'short', shirt: '#5f6470', bg: '#e6e0d4' },
   celular:   { name: 'Tu celular', short: 'tu celular', phone: true, bg: '#1f2a44' },
+  // Senders of the real offers (content round 2026-11-02).
+  muni:      { name: 'La municipalidad', short: 'la muni', phone: true, bg: '#1b998b' },
+  cetpro:    { name: 'El CETPRO', short: 'el CETPRO', phone: true, bg: '#2f6db5' },
   self:      { name: 'Tú', short: 'tú', skin: '#b98459', hair: '#1d140e', style: 'long', shirt: '#2f6db5', bg: '#dde8f6' },
   // From the «Y tú qué harías» prototype, written as girls (user decision 2026-10-26).
   alex:      { name: 'Alex, una chica del barrio', short: 'Alex', skin: '#a9764f', hair: '#24160d', style: 'ponytail', shirt: '#f2b134', bg: '#fbefd2' },
@@ -670,6 +673,7 @@ RG_CONTENT.winMessages = {
   end_win_red: 'Una captura antes de bloquear y un reporte parecen poco, pero sumados a los de otras chicas sacaron a esa cuenta de circulación. Reportar protege a quienes vienen después.',
   end_win_sueno: 'Un sueño con un camino que se puede comprobar es una protección: cuando llega una oferta que promete demasiado, tienes con qué compararla.',
   end_win_amiga: 'Avisar a una amiga a tiempo es de lo que más protege, a ella y a ti. Contar lo que ves no es meterse: es cuidarse entre amigas.',
+  end_win_deuda: 'Lo que te dan rápido (un pasaje, una recarga, un adelanto) después lo cobran como una deuda. Cortar tarde también sirve, y si te escriben para cobrarte, guarda las capturas y cuéntaselo a alguien de confianza.',
   end_win_tarde: 'No hay un momento justo para pedir ayuda: hacerlo después de haber respondido o mandado algo también funciona. Nunca es tarde para contarlo.',
   end_win_temprano: 'Notar algo raro ya es suficiente para cortar. Una frase corta basta y no necesitas pruebas.',
   end_win_equilibrio: 'Mantener las cuatro barras cerca de la mitad es lo más seguro: quien engaña busca el hueco que deja una barra vacía o demasiado llena.',
@@ -1228,8 +1232,9 @@ support('storysup_deuda', 'conf',
   '{conf} lee el mensaje contigo. «Una deuda inventada no es tuya. No tienes que pagar ni ir a ningún lado.» Lo denuncian juntas en la Línea 1818.');
 
 RG_CONTENT.storyTriggers = [
-  // Three accepted gifts or advances across the year's offers.
-  { id: 'deuda', min: 3, flags: ['gift_chiclayo', 'gift_fotos', 'gift_casting', 'gift_beca', 'gift_freefire', 'gift_anfitriona', 'gift_alex', 'gift_dani'] }
+  // Two accepted gifts or advances across the year's offers (two recruitment
+  // offers a year since the real offer took a slot, content round 2026-11-02).
+  { id: 'deuda', min: 2, flags: ['gift_chiclayo', 'gift_fotos', 'gift_casting', 'gift_beca', 'gift_freefire', 'gift_anfitriona', 'gift_alex', 'gift_dani'] }
 ];
 
 /* ---------- winning the year and breaking the chain ---------- */
@@ -1391,11 +1396,53 @@ memory('mem_friend_gone', 'm_friend_gone', 'tutora',
   { l: 'Le escribo otra vez', fx: { a: 3 } },
   { l: 'Le pregunto a la miss dónde se avisa', fx: { f: 2 }, radar: 1, tags: ['Re'] });
 
+/* Content round 2026-11-02: a late cut, after she had accepted something,
+ * brings the recruiter back sooner, charging the «debt» (engine: cut at BC,
+ * or at B after a gift or after sending something). The cost comes from the
+ * recruiter; having told someone softens it. */
+card('deuda', { kind: 'after', after: 'debt', debt: true, who: 'rec',
+  text: 'Al día siguiente te escribe otra cuenta.',
+  chat: { name: '{rre}', lines: [
+    ['ya sé que me bloqueaste'],
+    ['pero me debes {debt}. O me lo devuelves o le escribo a tu familia', 'deuda']
+  ] },
+  L: { l: 'Le devuelvo la plata para que me deje', fx: { p: -10 }, paid: true },
+  R: { l: 'No pago. Capturo el chat y se lo enseño a {conf}', fx: { s: -3 }, capture: true, tell: true, tags: ['Ac', 'Re'] } });
+card('deuda_acomp', { kind: 'after', after: 'debt', debt: true, who: 'rec',
+  text: 'Al día siguiente te escribe otra cuenta. Esta vez {conf} está contigo cuando llega el mensaje.',
+  chat: { name: '{rre}', lines: [
+    ['ya sé que me bloqueaste'],
+    ['pero me debes {debt}. O me lo devuelves o le escribo a tu familia', 'deuda']
+  ] },
+  L: { l: 'Igual le devuelvo una parte', fx: { p: -5 }, paid: true },
+  R: { l: 'Lo reportamos juntas y no pagamos', fx: { f: 2 }, capture: true, report: true, tags: ['Re'] } });
+
+card('end_win_deuda', { kind: 'ending', title: 'Diciembre: la deuda volvió', recall: 'cortó cuando ya había aceptado algo, y la deuda volvió a escribir', who: 'girl',
+  text: 'Es la clausura. Cortaste cuando ya habías aceptado algo, y la deuda volvió a escribir. Lo que te dieron tan rápido volvió como deuda.', L: NEXT, R: NEXT });
+
+// A real offer an earlier girl checked or took (content round 2026-11-02).
+memory('mem_real_checked', 'm_real_checked', 'prev',
+  '{memname} te cuenta que una vez le escribieron por una oferta que sí era real. «La revisé en la página oficial y fui con mi familia. No cobraban nada.»',
+  { l: 'Igual todo me da desconfianza', fx: { s: -1 } },
+  { l: 'Si me llega una, la reviso así', fx: { s: 3 }, radar: 1, tags: ['E0'] });
+memory('mem_real_took', 'm_real_took', 'prev',
+  '«Una vez acepté una oferta sin revisarla y justo era real», te dice {memname}. «Tuve suerte. La próxima la busco primero en la página oficial.»',
+  { l: 'Entonces hay que arriesgarse', fx: { s: 2 } },
+  { l: 'Yo la buscaría primero', fx: { s: 2 }, radar: 1, tags: ['E0'] });
+
+// She answered the year's real offer with «No respondo» (user decision
+// 2026-11-03): the year goes on, and December says the dream waits.
+card('end_win_pasada', { kind: 'ending', title: 'Diciembre: se te pasó la convocatoria', recall: 'dejó pasar una oferta que era real', who: 'girl',
+  text: 'Es la clausura. Esta vez la oferta era real y se fue sin que la revisaras. El sueño queda para el próximo año.', L: NEXT, R: NEXT });
+RG_CONTENT.winMessages.end_win_pasada = 'Las ofertas reales se pueden comprobar: están en una página del Estado, tienen plazos públicos, no cobran y puedes ir con tu familia. Con esas cuatro cosas se distingue una oferta real de una trampa.';
+
 ;
 /* Chamba en Chiclayo: fake job offer from a Facebook job group, moves to
  * WhatsApp, pays the ticket, asks for DNI and full-body photos. Adapted from
  * 03 App simulador/cases/01_chiclayo.json. */
 arc('chiclayo', {
+  // What the recruiter charges after a late cut (content round 2026-11-02).
+  debt: 'el pasaje que te pagamos',
   title: 'Chamba en Chiclayo', channel: 'facebook',
   recruiter: { name: 'Rosa · Empleos Norte', names: [
     { name: 'Rosa · Empleos Norte', short: 'Rosa', re: 'Empleos Norte Perú' },
@@ -1523,6 +1570,8 @@ memory('mem_cut_chiclayo_4', 'm_cutAB_chiclayo', 'prev',
 /* Plata por fotos: money for photos on Instagram, Yape in advance, requests
  * escalate, then a threat to share. Adapted from cases/02_fotos.json. */
 arc('fotos', {
+  // What the recruiter charges after a late cut (content round 2026-11-02).
+  debt: 'los S/ 20 que te yapeé',
   title: 'Plata por fotos', channel: 'instagram',
   recruiter: { name: 'bruno.promos', names: [
     { name: 'bruno.promos', re: 'promos.bruno2' },
@@ -1657,6 +1706,8 @@ memory('mem_cut_fotos_3', 'm_cutA_fotos', 'prev',
  * swimsuit photos and a fee, says to lie about age and come alone. Adapted
  * from cases/04_casting.json. */
 arc('casting', {
+  // What the recruiter charges after a late cut (content round 2026-11-02).
+  debt: 'los S/ 80 del book',
   title: 'El casting', channel: 'whatsapp',
   recruiter: { name: 'Staff Models Perú', names: [
     { name: 'Staff Models Perú', re: 'Staff Models Lima' },
@@ -1774,6 +1825,8 @@ memory('mem_cut_casting_3', 'm_cutA_casting', 'prev',
  * family can't see the house, then work to "pay the room". Adapted from
  * cases/06_beca.json. */
 arc('beca', {
+  // What the recruiter charges after a late cut (content round 2026-11-02).
+  debt: 'el pasaje y el cupo que te separamos',
   title: 'Beca en Lima', channel: 'facebook',
   recruiter: { name: 'Fundación Futuro Joven', names: [
     { name: 'Fundación Futuro Joven', short: 'Futuro Joven', re: 'Becas Perú Joven' },
@@ -1887,6 +1940,8 @@ memory('mem_cut_beca_2', 'm_cut_beca', 'prev',
  * moves to WhatsApp, secret photos, guilt, a meeting with an older "cousin".
  * Adapted from cases/03_freefire.json. */
 arc('freefire', {
+  // What the recruiter charges after a late cut (content round 2026-11-02).
+  debt: 'los diamantes que te regalé',
   title: 'Dúo en Free Fire', channel: 'freefire',
   recruiter: { name: 'Kevin_FF', names: [
     { name: 'Kevin_FF', short: 'Kevin', re: 'Kev1n_FF' },
@@ -2009,6 +2064,8 @@ memory('mem_cut_freefire_3', 'm_cutA_freefire', 'prev',
  * paid by "fichas", ticket deducted from pay, they keep the DNI, lie to your
  * mother. Adapted from cases/05_maldonado.json (PROMSEX 2025). */
 arc('anfitriona', {
+  // What the recruiter charges after a late cut (content round 2026-11-02).
+  debt: 'el pasaje que te mandamos',
   title: 'Anfitriona en Mazuko', channel: 'tiktok',
   recruiter: { name: 'Trabajo Mazuko', names: [
     { name: 'Trabajo Mazuko', re: 'Trabajo Mazuko 2' },
@@ -2126,6 +2183,8 @@ memory('mem_cut_anfitriona_2', 'm_cut_anfitriona', 'prev',
  * second girl of a chain), not by skill. The scene at the destination is
  * told later by Alex, in the epilogue opened by «Tranquila no es segura». */
 arc('alex', {
+  // What the recruiter charges after a late cut (content round 2026-11-02).
+  debt: 'el pasaje de ida',
   title: 'Una oferta tranquila', channel: 'whatsapp', calm: true, unlock: { gen: 1 },
   recruiter: { name: 'Sam, del barrio', skin: '#a06c47', hair: '#1d140e', style: 'short', shirt: '#1f2a44', bg: '#e2e5ec' },
   start: 'alx_antes', recontact: 'alx_re', meetCard: 'alx_meet', supportCard: 'alx_sup',
@@ -2236,6 +2295,8 @@ memory('mem_cut_alex_3', 'm_cutA_alex', 'prev',
  * third girl of a chain as fallback. Dani appears as a classmate who already
  * paid, so warning her is part of the arc. */
 arc('dani', {
+  // What the recruiter charges after a late cut (content round 2026-11-02).
+  debt: 'lo que falta de la inscripción',
   title: 'Pagar para entrar', channel: 'facebook', unlock: { mem: 'u_canal', gen: 2 },
   recruiter: { name: 'Capacitaciones Selva', names: [
     { name: 'Capacitaciones Selva' },
@@ -2336,6 +2397,131 @@ memory('mem_cut_dani_3', 'm_cutA_dani', 'prev',
   '«Un curso pedía S/ 100 para entrar y no me inscribí», te cuenta {memname}. «Si te cobran por darte chamba, ya no es chamba.»',
   { l: 'Pero daban trabajo asegurado', fx: { s: 2 } },
   { l: 'Me lo guardo', radar: 1, fx: { f: 2 }, tags: ['E0'] });
+
+;
+/* Real offers (content round 2026-11-02, user approved). One a year takes one
+ * of the three offer slots, picked with the story's seed, and looks like a
+ * recruitment offer (a chat inside the card). It is never a recruitment
+ * attempt: «Tu ruta RADAR» shows it as «Era real», with what made it real.
+ * First card: «No respondo» (a reflex cut, Sueños down and a classmate who did
+ * go, some weeks later), or a question that opens the second card: take it at
+ * once (Sueños up, the result later) or check it (Sueños and Familia up, the
+ * application and the result). `real` on a choice records the outcome. */
+RG_CONTENT.realOffers = [];
+function realOffer(id, def) { def.id = id; RG_CONTENT.realOffers.push(def); return def; }
+// A card of a real offer. o.chat: { name, channel, lines }.
+function rc(id, who, text, L, R, o) {
+  o = o || {};
+  o.kind = 'real'; o.who = who; o.text = text; o.L = L; o.R = R; o.realOffer = id.split('_')[1];
+  return card(id, o);
+}
+
+/* ---------- Feria de empleo de la municipalidad (Castilla, Sullana, Cris) ---------- */
+// Reuses the job fair of the branch «Una oportunidad de verdad» (feria).
+realOffer('feria', {
+  title: 'Feria de empleo de la municipalidad', channel: 'facebook', profile: ['bi', 'sp', 'cr'], start: 'rf_feria_a',
+  why: [
+    'Está en la página oficial de la municipalidad.',
+    'La inscripción es gratis: nadie te cobra.',
+    'Tiene fecha, lugar y horario públicos.',
+    'Te piden ir con tu mamá o tu papá.'
+  ]
+});
+rc('rf_feria_a', 'muni', 'Le diste like a una publicación de empleos y te escriben.',
+  { l: 'No respondo', cut: true, real: 'reflex', fx: { s: -8 }, go: 'rf_feria_eco', gap: 5 },
+  { l: '¿Y cómo sé que es de la muni?', go: 'rf_feria_b', gap: 0 },
+  { chat: { name: 'Empleo Joven · Muni de {city}', channel: 'facebook', lines: [
+    ['Hola, gracias por tu interés en la feria de empleo de la municipalidad'],
+    ['Es el sábado en la plaza, de 9 a 1. Hay trabajos de fin de semana con contrato y con permiso de tus papás'],
+    ['La inscripción es gratis. Trae tu DNI y ven con tu mamá o tu papá']
+  ] } });
+rc('rf_feria_b', 'muni', 'Te responden con el enlace de la página de la municipalidad.',
+  { l: 'Ya, me apunto', real: 'accepted', fx: { s: 4 }, go: 'rf_feria_res', gap: 4 },
+  { l: 'Lo reviso en la página y se lo cuento a {conf}', real: 'checked', fx: { s: 8, f: 3 }, tags: ['As'], go: 'rf_feria_app', gap: 2 },
+  { week: 0, chat: { name: 'Empleo Joven · Muni de {city}', channel: 'facebook', lines: [
+    ['Puedes revisarlo en la página oficial o preguntar en la oficina de la muni, en la plaza'],
+    ['Si tienes dudas, que tu familia nos llame al número de la página']
+  ] } });
+rc('rf_feria_app', 'conf', 'Fuiste a la feria con {conf}. En el stand de la municipalidad te piden tu DNI y la firma de {conf}, y te dan una dirección y un horario.',
+  { l: 'Firmamos y nos vamos', fx: { f: 2 }, go: 'rf_feria_res', gap: 3 },
+  { l: 'Pregunto el horario y quién me paga', fx: { s: 2 }, tags: ['As'], go: 'rf_feria_res', gap: 3 });
+rc('rf_feria_res', 'muni', 'La municipalidad te llama: empiezas el sábado en la biblioteca municipal, con contrato y S/ 30 por día. Te piden la firma de {conf}.',
+  { l: 'Ahorita no puedo', fx: { p: -2 } },
+  { l: 'Voy el sábado', fx: { p: 6, s: 3 } });
+rc('rf_feria_eco', 'grupo', 'Una chica de tu salón fue a la feria de la muni con su mamá. Ya trabaja los sábados en la biblioteca, con contrato.',
+  { l: 'Seguro tuvo vara', fx: { s: -3 } },
+  { l: 'Le pregunto cómo hizo, para la próxima', fx: { s: 3 }, tags: ['As'] });
+
+/* ---------- Curso gratis en un CETPRO público (Puerto Maldonado) ---------- */
+realOffer('cetpro', {
+  title: 'Curso gratis en un CETPRO público', channel: 'whatsapp', profile: ['ns'], start: 'rf_cetpro_a',
+  why: [
+    'Es un centro del Estado: aparece en la página del Minedu.',
+    'La matrícula es gratis.',
+    'Tiene horario y fechas publicados.',
+    'Puedes ir con tu familia a ver el local antes.'
+  ]
+});
+rc('rf_cetpro_a', 'cetpro', 'Te escribe un número que no tienes guardado.',
+  { l: 'No respondo', cut: true, real: 'reflex', fx: { s: -8 }, go: 'rf_cetpro_eco', gap: 5 },
+  { l: '¿Dónde queda el local?', go: 'rf_cetpro_b', gap: 0 },
+  { chat: { name: 'CETPRO público · {city}', channel: 'whatsapp', lines: [
+    ['Hola, te escribimos porque dejaste tu número en la feria vocacional del cole'],
+    ['Abrimos matrícula gratis para cursos de cocina, costura y cómputo, de lunes a jueves en la tarde'],
+    ['Puedes venir con tu mamá a ver el local. La lista de cursos está en la página del Minedu']
+  ] } });
+rc('rf_cetpro_b', 'cetpro', 'Te mandan la dirección: a dos cuadras del mercado, un local con letrero.',
+  { l: 'Ya, me matriculo', real: 'accepted', fx: { s: 4 }, go: 'rf_cetpro_res', gap: 4 },
+  { l: 'Lo busco en la página del Minedu y voy con {conf} a ver el local', real: 'checked', fx: { s: 8, f: 3 }, tags: ['As'], go: 'rf_cetpro_app', gap: 2 },
+  { week: 0, chat: { name: 'CETPRO público · {city}', channel: 'whatsapp', lines: [
+    ['La matrícula es gratis, solo trae tu DNI'],
+    ['Atendemos de lunes a viernes. Puedes venir con quien quieras']
+  ] } });
+rc('rf_cetpro_app', 'conf', 'Fuiste al CETPRO con {conf}. Te muestran las aulas y el horario. Para matricularte piden tu DNI y la firma de {conf}. No cobran nada.',
+  { l: 'Me matriculo en cocina', fx: { f: 2 }, go: 'rf_cetpro_res', gap: 3 },
+  { l: 'Me matriculo en cómputo', fx: { s: 2 }, go: 'rf_cetpro_res', gap: 3 });
+rc('rf_cetpro_res', 'cetpro', 'Terminaste el primer módulo del curso. Te dan un certificado con tu nombre, firmado por el CETPRO.',
+  { l: 'Lo guardo nomás', fx: { s: 1 } },
+  { l: 'Se lo enseño a {conf} y me inscribo al siguiente', fx: { s: 4, f: 2 } });
+rc('rf_cetpro_eco', 'grupo', 'Una chica de tu salón se matriculó en el CETPRO. Ya vende los queques que aprendió a hacer.',
+  { l: 'Seguro le regalaron todo', fx: { s: -3 } },
+  { l: 'Le pregunto cómo se matriculó', fx: { s: 3 }, tags: ['As'] });
+
+/* ---------- Beca 18 del Pronabec (Puerto Maldonado, Sullana, Cris) ---------- */
+// Not in Castilla, where the dream subplot is already Beca 18.
+realOffer('beca18', {
+  title: 'Beca 18 del Pronabec', channel: 'whatsapp', profile: ['ns', 'sp', 'cr'], start: 'rf_beca18_a',
+  why: [
+    'La convocatoria está en la página oficial del Pronabec.',
+    'Postular es gratis: nadie te cobra por inscribirte.',
+    'Los plazos y requisitos son públicos.',
+    'Puedes postular con tu tutora y tu familia.'
+  ]
+});
+rc('rf_beca18_a', 'celular', 'En el grupo de la promo comparten un anuncio.',
+  { l: 'No respondo', cut: true, real: 'reflex', fx: { s: -8 }, go: 'rf_beca18_eco', gap: 5 },
+  { l: '¿Esto es de verdad?', go: 'rf_beca18_b', gap: 0 },
+  { chat: { name: 'Promo · Avisos del cole', channel: 'whatsapp', lines: [
+    ['Salió la convocatoria de Beca 18'],
+    ['Cubre estudios en un instituto o universidad, con pensión y materiales'],
+    ['La inscripción es gratis y está en la página oficial del Pronabec. La miss Lucy ayuda a postular los jueves']
+  ] } });
+rc('rf_beca18_b', 'tutora', 'Le escribes a la miss Lucy.',
+  { l: 'Ya, postulo', real: 'accepted', fx: { s: 4 }, go: 'rf_beca18_res', gap: 4 },
+  { l: 'La reviso en la página y la vemos el jueves con usted', real: 'checked', fx: { s: 8, f: 3 }, tags: ['As'], go: 'rf_beca18_app', gap: 2 },
+  { week: 0, chat: { name: 'Miss Lucy', channel: 'whatsapp', lines: [
+    ['Sí, es la convocatoria oficial. Revísala tú misma en la página del Pronabec'],
+    ['Ahí están los plazos. Nadie te pide pagar nada']
+  ] } });
+rc('rf_beca18_app', 'tutora', 'En la sala de cómputo, la miss te ayuda a crear tu cuenta en la página del Pronabec. Subes tu DNI y tu certificado de estudios.',
+  { l: 'Lo subo yo sola', fx: { s: 2 }, go: 'rf_beca18_res', gap: 3 },
+  { l: 'Le enseño a {conf} lo que subí', fx: { f: 2 }, go: 'rf_beca18_res', gap: 3 });
+rc('rf_beca18_res', 'tutora', 'Salió la lista en la página oficial del Pronabec. Tu nombre está entre las preseleccionadas para la siguiente etapa.',
+  { l: 'Me da miedo la siguiente etapa', fx: { s: 1 } },
+  { l: 'Le pido a la miss que me ayude con lo que sigue', fx: { s: 5 } });
+rc('rf_beca18_eco', 'grupo', 'Una chica de tu promo postuló a Beca 18 con la miss. Ya salió preseleccionada.',
+  { l: 'Seguro la ayudaron por ser la favorita', fx: { s: -3 } },
+  { l: 'Le pregunto cómo postuló', fx: { s: 3 }, tags: ['As'] });
 
 ;
 /* Deeds («hazañas»), following reports/Desbloqueos en Reigns.md: visible
@@ -2823,6 +3009,13 @@ tstep('cr_ami_2b', 'cr', 'amiga', 2, 'amiga',
   { l: 'Mejor', fx: { a: 4 }, line: 'La amiga: {friend} bloqueó al jugador y ahora juega con su escuadra.' },
   { l: 'Lo reportamos en el juego', fx: { a: 4 }, tags: ['Re'], line: 'La amiga: reportaron juntas al jugador en el juego.' }, { flags: ['t_ami_1', 't_amiga_warned'], after: ['t_ami_1', 4] });
 
+// «El sueño no se cumple» (user decision 2026-11-03): if she answered the
+// year's real offer with «No respondo», the choice that would reach the dream
+// becomes this one (the engine swaps it, see choiceOf in src/engine.js). The
+// «let go» choice of the same card stays.
+RG_CONTENT.dreamMissed = { l: 'Este año ya no llego. Queda para el próximo', fx: { s: -2 },
+  line: 'El sueño: se le pasó la convocatoria y queda para el próximo año.' };
+
 ;
 /* Story endings of the trafficking thread, beyond the bars (v0.3, user
  * decisions 2026-10-26). Each one is a short chain of daily cards; the risky
@@ -3097,6 +3290,19 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       .slice(0, C.DEEDS_ACTIVE || 3).map(function (d) { return d.id; });
   }
 
+  // «El sueño no se cumple» (user decision 2026-11-03): if she answered the
+  // year's real offer with «No respondo», the choice that would reach her
+  // dream becomes C.dreamMissed (the dream waits for next year). The «let
+  // go» choice stays as it is.
+  function dreamBlocked(run) { return !!(run.real && run.real.outcome === 'reflex'); }
+  function choiceOf(run, C, c, side) {
+    var ch = c && c[side];
+    if (ch && C.dreamMissed && dreamBlocked(run) && (ch.set || []).indexOf('t_sueno_done') >= 0) return C.dreamMissed;
+    return ch;
+  }
+
+  function realOf(C, id) { return (C.realOffers || []).filter(function (o) { return o.id === id; })[0]; }
+
   // Her best friend this year: the profile's friend, or the next one of the
   // cast if an earlier friend left with an offer (story «amiga»).
   function friendOf(C, run) {
@@ -3149,8 +3355,20 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       .map(function (id, i) { return { id: id, i: i, n: played[id] || 0, fresh: !!C.arcs[id].unlock && !played[id] }; });
     // An offer that just opened comes first, so the unlock is felt right away.
     pool.sort(function (x, y) { return (y.fresh - x.fresh) || x.n - y.n || x.i - y.i; });
-    pool.slice(0, ARCS_PER_RUN).sort(function (x, y) { return x.i - y.i; }).forEach(function (p, k) {
-      run.plan.push({ arc: p.id, week: between(run, ARC_WEEKS[k][0], ARC_WEEKS[k][1]), started: false });
+    // One real offer a year (content round 2026-11-02) takes one of the
+    // three offer slots, picked with the story's seed, and looks the same as
+    // a recruitment offer. It is never a recruitment attempt.
+    var reals = (C.realOffers || []).filter(function (o) { return !o.profile || o.profile.indexOf(game.profile) >= 0; });
+    var realSlot = reals.length ? between(run, 0, ARC_WEEKS.length - 1) : -1;
+    if (reals.length) {
+      var ro = reals[Math.abs((game.seed + game.gen * 31) | 0) % reals.length];
+      run.real = { id: ro.id, week: between(run, ARC_WEEKS[realSlot][0], ARC_WEEKS[realSlot][1]), started: false, outcome: null };
+    }
+    var slots = [];
+    for (var sl = 0; sl < ARC_WEEKS.length; sl++) if (sl !== realSlot) slots.push(sl);
+    pool.slice(0, Math.min(ARCS_PER_RUN, slots.length)).sort(function (x, y) { return x.i - y.i; }).forEach(function (p, k) {
+      var w = ARC_WEEKS[slots[k]];
+      run.plan.push({ arc: p.id, week: between(run, w[0], w[1]), started: false });
     });
 
     run.queue.push({ id: 'intro', wait: 0 });
@@ -3209,6 +3427,11 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       if (run.queue[i].wait > 0) continue;
       if (run.lastMeta && !run.queue[i].now && isMeta(C, run.queue[i].id) && run.queue.length < 6) continue;
       return run.queue.splice(i, 1)[0];
+    }
+    if (!run.active && run.real && !run.real.started && run.week >= run.real.week) {
+      run.real.started = true;
+      run.real.startWeek = run.week;
+      return { id: realOf(C, run.real.id).start };
     }
     if (!run.active) {
       for (i = 0; i < run.plan.length; i++) {
@@ -3276,7 +3499,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     run.active = arcId;
     run.attempts[arcId] = {
       arc: arcId, reached: -1, cut: null, withSomeone: false, capture: false,
-      report: false, toldAfter: false, warned: false, paid: false, letters: {}
+      report: false, toldAfter: false, warned: false, paid: false, late: false, letters: {}
     };
   }
 
@@ -3322,7 +3545,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
   function choose(run, C, side) {
     if (run.done) return null;
     var c = getCard(C, run, run.current);
-    var ch = c[side];
+    var ch = choiceOf(run, C, c, side);
     if (!ch) throw new Error('Card ' + c.id + ' has no ' + side);
     if (run.over) {
       var nxt = run.endQueue.shift();
@@ -3394,14 +3617,22 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
         // The recruiter writes again after the year's first cut; after later
         // cuts only with a recontact the chain has not seen yet.
         run.recontacts = (run.recontacts || 0) + 1;
+        // A late cut, after she had accepted something (a gift, a pasaje, a
+        // recarga, an advance, or sent data), always brings the recruiter
+        // back sooner, charging the «debt». Having told someone softens it.
+        var late = att.cut === 'BC' || (att.cut === 'B' && (run.flags['gift_' + arcId] || run.flags.sent));
         var re = C.arcs[arcId].recontact;
-        if (run.recontacts === 1 || !(run.afterSeen || {})[re]) run.queue.push({ id: re, wait: 3, arc: arcId });
+        if (late) {
+          att.late = true;
+          run.queue.push({ id: att.withSomeone || att.toldAfter ? 'deuda_acomp' : 'deuda', wait: 1, arc: arcId });
+        } else if (run.recontacts === 1 || !(run.afterSeen || {})[re]) run.queue.push({ id: re, wait: 3, arc: arcId });
       }
       if (ch.meet) {
         att.reached = MOMENTS.length - 1;
         run.over = { type: 'meet', arc: arcId };
       }
     }
+    if (ch.real && run.real) run.real.outcome = ch.real;
     if (ch.story && !run.over && (!ch.storyIf || run.flags[ch.storyIf])) run.over = { type: 'story', id: ch.story, arc: arcId };
     if (ch.go) {
       var gap = ch.gap != null ? ch.gap : (rand(run) < 0.5 ? 0 : 1);
@@ -3531,15 +3762,22 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     var warned = Object.keys(run.attempts).some(function (k) { return run.attempts[k].warned; }) || run.flags.t_amiga_warned;
     var atts = Object.keys(run.attempts).map(function (k) { return run.attempts[k]; });
     var late = atts.some(function (a) { return (a.reached >= 3 || run.flags.sent) && (a.toldAfter || a.withSomeone); });
+    // A cut after accepting something has its own December line, apart
+    // from «pediste ayuda a tiempo».
+    var debt = atts.some(function (a) { return a.late; });
     var early = atts.length >= 2 && atts.every(function (a) { return a.cut === 'A' || a.cut === 'AB'; });
     var even = BAR_IDS.every(function (b) { return run.bars[b] >= 35 && run.bars[b] <= 65; });
     // Every variant she qualifies for, in priority order; the first one the
     // earlier girls of the chain have not seen wins, so generations differ.
     var fits = [];
     if (chainBreaksNow(run)) fits.push('end_win_red');
+    // She let the year's real offer go without checking it: December says
+    // the dream waits for next year (user decision 2026-11-03).
+    if (dreamBlocked(run)) return 'end_win_pasada';
     if (Object.keys(run.flags).some(function (f) { return /^b_\w+_good$/.test(f); })) fits.push('end_win_rama');
     if (run.flags.t_sueno_done) fits.push('end_win_sueno');
-    if (late) fits.push('end_win_tarde');
+    if (debt) fits.push('end_win_deuda');
+    else if (late) fits.push('end_win_tarde');
     if (warned) fits.push('end_win_amiga');
     if (cut && !told) fits.push('end_win_callada');
     if (early) fits.push('end_win_temprano');
@@ -3579,7 +3817,8 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       friend: friendOf(C, run).short, gonefriend: run.goneFriend || '', city: profile.city,
       recruiter: arc ? recruiterOf(C, run, arcId).name : 'esa cuenta',
       rshort: arc ? recruiterOf(C, run, arcId).short : 'esa cuenta',
-      rre: arc ? recruiterOf(C, run, arcId).re : 'otra cuenta'
+      rre: arc ? recruiterOf(C, run, arcId).re : 'otra cuenta',
+      debt: arc ? (arc.debt || 'lo que te di') : 'lo que te di'
     };
   }
   // «{conf} te dice» starts with «tu mamá»: capitalise the start of the text.
@@ -3610,7 +3849,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
 
   function preview(run, C, side) {
     if (!run.current || run.over) return {};
-    var fx = scaled((getCard(C, run, run.current)[side] || {}).fx);
+    var fx = scaled((choiceOf(run, C, getCard(C, run, run.current), side) || {}).fx);
     var out = {};
     BAR_IDS.forEach(function (b) {
       var d = fx[b] || 0;
@@ -3666,7 +3905,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
           return { t: sys ? t.slice(4) : t, sys: sys, signal: ln[1] || null, marked: !!(ln[1] && marks) };
         })
       } : null,
-      L: { l: fill(c.L.l, v) }, R: { l: fill(c.R.l, v) },
+      L: { l: fill(choiceOf(run, C, c, 'L').l, v) }, R: { l: fill(choiceOf(run, C, c, 'R').l, v) },
       same: c.L.l === c.R.l,
       ending: !!run.over,
       week: Math.min(run.week, YEAR), month: monthOf(run.week),
@@ -3799,7 +4038,8 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       branches: { got: Math.min(branchesDone, branchYears), total: branchYears },
       signals: { got: sigs.filter(function (k) { return game.caught[k]; }).length, total: sigs.length },
       attempts: { cut: atts.filter(function (a) { return a.cut; }).length, total: atts.length },
-      people: { got: allies.filter(function (k) { return game.people[k]; }).length, total: allies.length }
+      people: { got: allies.filter(function (k) { return game.people[k]; }).length, total: allies.length },
+      dreams: { got: game.history.filter(function (h) { return h.dream; }).length, total: game.history.length }
     };
   }
 
@@ -3820,7 +4060,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       return {
         arc: p.arc, title: arc.title, channel: arc.channel, reached: a.reached,
         cutAt: a.cut ? MOMENTS.indexOf(a.cut) : null, met: o.type === 'meet' && o.arc === p.arc,
-        withSomeone: a.withSomeone, capture: a.capture, report: a.report, toldAfter: a.toldAfter, warned: a.warned, paid: a.paid,
+        withSomeone: a.withSomeone, capture: a.capture, report: a.report, toldAfter: a.toldAfter, warned: a.warned, paid: a.paid, late: a.late,
         signals: sigs, exits: arc.exits.map(function (e) { return fill(e, v); })
       };
     });
@@ -3831,6 +4071,10 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     return {
       girl: run.girl, weeks: Math.min(run.week - 1, YEAR), type: o.type, bar: o.bar || null, side: o.side || null,
       story: o.type === 'story' ? o.id : null, friend: v.friend,
+      real: run.real && run.real.started ? (function () {
+        var ro = realOf(C, run.real.id);
+        return { id: ro.id, title: ro.title, channel: ro.channel, outcome: run.real.outcome, why: ro.why.slice() };
+      })() : null,
       title: fill(endCard.title || '', v), endText: cap(fill(textOf(run, endCard), v)),
       message: fill((o.type === 'bar' && C.barMessages && C.barMessages[o.bar + '_' + o.side]) ||
         (o.type === 'story' && C.storyMessages && C.storyMessages[o.id]) ||
@@ -3857,15 +4101,20 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     var arcs = run.plan.filter(function (p) { return p.started; }).map(function (p) {
       var a = run.attempts[p.arc];
       return { arc: p.arc, reached: a.reached, cut: a.cut, withSomeone: a.withSomeone, report: a.report, toldAfter: a.toldAfter,
-        capture: a.capture, paid: a.paid };
+        capture: a.capture, paid: a.paid, late: a.late };
     });
     var endCard0 = getCard(C, run, endingIds(run, C)[0]);
     var recall = o.type === 'meet' ? C.arcs[o.arc].recall : endCard0.recall;
     game.history.push({
       gen: run.gen, girl: run.girl, end: o, key: endKey(o), title: fill(endCard0.title || '', vars(run, C, o.arc)), weeks: Math.min(run.week - 1, YEAR),
       arcs: arcs, letters: Object.keys(run.letters), recall: recall || 'pasó ese año',
-      deedsShown: run.deedsActive.slice(), branch: run.branch || null, friend: friendOf(C, run).short
+      deedsShown: run.deedsActive.slice(), branch: run.branch || null, friend: friendOf(C, run).short,
+      real: run.real && run.real.started ? { id: run.real.id, outcome: run.real.outcome } : null,
+      dream: !!run.flags.t_sueno_done, dreamMissed: dreamBlocked(run)
     });
+    // A real offer she checked or took can come up in a later girl's memory.
+    if (run.real && run.real.outcome === 'checked') game.mem.m_real_checked = run.girl;
+    if (run.real && run.real.outcome === 'accepted') game.mem.m_real_took = run.girl;
     arcs.forEach(function (a) {
       game.mem['m_seen_' + a.arc] = run.girl;
       if (a.cut) {
@@ -3926,7 +4175,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
   var api = {
     MOMENTS: MOMENTS, MOMENT_LABELS: MOMENT_LABELS, BAR_IDS: BAR_IDS, MAX: MAX, YEAR: YEAR,
     RADAR_SEE: RADAR_SEE, FX_SCALE: FX_SCALE, CLIMAX_WEEKS: CLIMAX_WEEKS, CHAIN_REPORTS: CHAIN_REPORTS, ARC_WEEKS: ARC_WEEKS,
-    ACTS: ACTS, MEM_MAX: MEM_MAX, actOf: actOf, category: category, threadState: threadState,
+    realOf: realOf, dreamBlocked: dreamBlocked, choiceOf: choiceOf, ACTS: ACTS, MEM_MAX: MEM_MAX, actOf: actOf, category: category, threadState: threadState,
     chainOver: function (game, C) { return game.gen >= C.profiles[game.profile].girls.length; },
     nextBranch: function (game, C) { return branchOfYear(upgrade(game), C, Object.assign({}, game.mem, unlocks(game, C))); },
     newGame: newGame, newRun: newRun, choose: choose, preview: preview, view: view,
@@ -4337,6 +4586,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     if (a.capture) chips.push('<span class="chip good">Guardó capturas</span>');
     if (a.report) chips.push('<span class="chip good">Reportó la cuenta</span>');
     if (a.toldAfter) chips.push('<span class="chip good">Lo contó después</span>');
+    if (a.late) chips.push('<span class="chip warn">Cortó cuando ya había aceptado algo, y le escribieron para cobrarle</span>');
     if (a.paid) chips.push('<span class="chip warn">Le pagó a quien la amenazaba: quien amenaza siempre pide más</span>');
     if (a.warned) chips.push('<span class="chip good">Avisó a otra chica</span>');
     var ch = CHANNELS[a.channel] || {};
@@ -4350,6 +4600,20 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       '<div class="journey">' + segs + '</div><div class="journey-labels">' + labels + '</div>' + outcome +
       (chips.length ? '<div class="chips">' + chips.join('') + '</div>' : '') +
       '<h4>Otras salidas que tenía</h4><ul class="exits">' + a.exits.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' + sigs + '</div>';
+  }
+
+  // The year's real offer: not an attempt, so no signals and no cut. It
+  // shows what made it real.
+  var REAL_OUTCOMES = {
+    reflex: 'No la respondió. Esta vez la oferta era real.',
+    checked: 'La comprobó antes de decidir, y era real.',
+    accepted: 'La aceptó sin comprobarla. Esta vez era real; la próxima, compruébala igual.'
+  };
+  function realHtml(r) {
+    var ch = CHANNELS[r.channel] || {};
+    return '<div class="attempt real"><div class="ch">' + esc(ch.label || r.channel) + ' · Era real</div><h3>' + esc(r.title) + '</h3>' +
+      '<p class="outcome' + (r.outcome === 'checked' ? ' cut' : '') + '">' + esc(REAL_OUTCOMES[r.outcome] || 'El año terminó antes de que decidiera.') + '</p>' +
+      '<h4>Lo que la hacía real</h4><ul class="exits">' + r.why.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
   }
 
   function barsLine(bars) {
@@ -4388,6 +4652,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       }).join('') + '</div>' + (fb.type === 'story' ? '' : '<p class="small muted">' + esc(barsLine(fb.bars)) + '</p>') : '') +
       '<h2>Los intentos de este año</h2>' +
       (fb.attempts.length ? fb.attempts.map(function (a) { return attemptHtml(a, fb.moments); }).join('') : '<p class="muted">Este año no llegó a aparecer ninguna oferta.</p>') +
+      (fb.real ? '<h2>La oferta que era real</h2>' + realHtml(fb.real) : '') +
       (fb.deeds && fb.deeds.length ? '<h2>Hazañas de este año</h2>' + fb.deeds.map(function (d) {
         return '<div class="deed-row done"><span class="dl">' + esc(d.letter) + '</span><span><b>' + esc(d.name) + '</b><small>Abre: ' + esc(d.opens) + '</small></span></div>';
       }).join('') : '') +
@@ -4444,7 +4709,9 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     var names = g.history.map(function (h) { return h.girl; });
     var girls = g.history.map(function (h) {
       var deeds = (C.deeds || []).filter(function (d) { return g.deeds[d.id] === h.girl; }).map(function (d) { return d.name; });
+      var dream = h.dream ? 'Sueño: encaminado' : h.dreamMissed ? 'Sueño: se le pasó la convocatoria' : 'Sueño: todavía no';
       return '<li><span class="n">' + (h.gen + 1) + '</span><span><b>' + esc(h.girl) + '</b> · ' + esc(h.title || 'Diciembre') + ' · semana ' + h.weeks +
+        '<small>' + esc(dream) + '</small>' +
         (deeds.length ? '<small>Hazañas: ' + esc(deeds.join(', ')) + '</small>' : '') + '</span></li>';
     }).join('');
     show('<div class="screen night"><div class="fb-head"><div class="eyebrow">Fin de la historia</div>' +
@@ -4452,6 +4719,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       '<div class="weeks">' + esc(p.place) + ' · ' + names.length + ' años</div></div>' +
       (g.chainBroken ? '<div class="fb-msg chain"><b>La cuenta cayó.</b> Entre varias chicas juntaron las pruebas y los reportes para que la den de baja.</div>' : '') +
       '<h2>Lo que lograron entre todas</h2><ul class="routes">' +
+      '<li><b>Sueños encaminados</b> · ' + col.dreams.got + ' de ' + col.dreams.total + '</li>' +
       '<li><b>Hazañas</b> · ' + col.deeds.got + ' de ' + col.deeds.total + '</li>' +
       '<li><b>Ramas cerradas</b> · ' + col.branches.got + ' de ' + col.branches.total + '</li>' +
       '<li><b>Señales que reconocieron</b> · ' + col.signals.got + ' de ' + col.signals.total + '</li>' +
