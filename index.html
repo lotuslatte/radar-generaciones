@@ -3137,6 +3137,233 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
   R: { l: '«No subas. Voy con tu mamá al terminal»', fx: { a: -2, f: 3 }, set: ['t_amiga_warned'], tags: ['Re'] } });
 
 ;
+/* RADAR usage log shared by the three prototypes. It records what the
+ * participant does (screens, choices, help taps, background/foreground) with
+ * the participant code from the link (?pid=...) and sends it in batches to a
+ * Google Sheet through an Apps Script web app (see «06 Registro»).
+ *
+ * Events wait in localStorage (`radar_log_queue`) and leave the queue only
+ * when the sheet confirms them, so nothing is lost without signal. The sheet
+ * drops duplicates by (session, n).
+ *
+ * Usage, before the prototype's own script reads its saved state:
+ *   RL.init({ proto: 'retos', version: '5.0.2', done: 'top:6px;left:6px' });
+ *   RL.screen('mapa');             // a new screen; logs «ver»
+ *   RL.ev('elige', 'r3:g2 opción B');  // an action on the current screen
+ *
+ * URL parameters: pid=<code> (participant code from SurveyCTO), log=<url>
+ * (send to another endpoint, for tests), nolog (record nothing).
+ * `done` places the «Terminé» button (CSS) over something nobody needs to tap.
+ * Facilitator panel: hold «Terminé» for two seconds, or five quick taps in
+ * the top-left corner of the screen. */
+(function (root) {
+  'use strict';
+  var RL = root.RL = {};
+
+  // Paste the Apps Script web app URL here (ends in /exec), then rebuild.
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbw04K8UOFdBwASvjU0e9dhLbfUnnSLyUjGKDB2Vgi3VNcf66eUIEUev1_1qjjD4vp40/exec';
+
+  var QKEY = 'radar_log_queue', PIDKEY = 'radar_log_pid', DEVKEY = 'radar_log_device';
+  // Saved progress of the three prototypes and the shared «Mi plan». Wiped
+  // when a tablet gets a new participant code, so each person starts clean.
+  var STATE_KEYS = ['radar_sim_v5', 'radar_retos_v5', 'radar-generaciones-v1', 'radar-generaciones-unlocks', 'radar_plan_v4'];
+  var BATCH = 200, EVERY = 5000;
+
+  var params = new URLSearchParams(root.location ? root.location.search : '');
+  var url = params.get('log') || ENDPOINT;
+  var off = params.has('nolog');
+  var ctx = { pid: '', device: '', proto: '', version: '', session: '' };
+  var n = 0, cur = '', queue = [], sending = false, timer = null, started = false;
+
+  function ls(k, v) {
+    try {
+      if (v === undefined) return localStorage.getItem(k);
+      if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v);
+    } catch (e) { /* private mode: the log still works for this page */ }
+    return null;
+  }
+  function rand(len) {
+    var s = '', abc = 'abcdefghijkmnpqrstuvwxyz23456789';
+    for (var i = 0; i < len; i++) s += abc[Math.floor(Math.random() * abc.length)];
+    return s;
+  }
+  // The queue is shared by every tab of the site (a tablet may keep the previous
+  // prototype open in the background), so each change reads it fresh first.
+  function loadQueue() {
+    var q = null;
+    try { q = JSON.parse(ls(QKEY) || '[]'); } catch (e) { q = null; }
+    // Without storage (private mode) the queue lives only in this page.
+    return Array.isArray(q) && (q.length || ls(QKEY) !== null) ? q : queue;
+  }
+  function saveQueue() { ls(QKEY, JSON.stringify(queue)); }
+
+  RL.init = function (o) {
+    if (started) return;
+    started = true;
+    ctx.proto = o.proto; ctx.version = o.version; ctx.done = o.done || 'top:6px;left:6px';
+    ctx.device = ls(DEVKEY) || ('dev_' + rand(4));
+    ls(DEVKEY, ctx.device);
+    var pid = (params.get('pid') || '').trim().slice(0, 40);
+    ctx.pid = pid;
+    if (pid && pid !== ls(PIDKEY)) {
+      STATE_KEYS.forEach(function (k) { ls(k, null); });
+      ls(PIDKEY, pid);
+    }
+    ctx.session = ctx.proto.slice(0, 3) + '_' + Date.now().toString(36) + rand(3);
+    queue = loadQueue();
+    if (off) return;
+    RL.ev('abre', [params.has('pid') ? '' : 'sin_pid', (navigator.userAgent || '').slice(0, 120)].filter(Boolean).join(' | '));
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') { RL.ev('segundo_plano'); beacon(); }
+      else { RL.ev('vuelve'); flush(); }
+    });
+    root.addEventListener('pagehide', function () { RL.ev('cierra'); beacon(); });
+    root.addEventListener('online', flush);
+    // Taps on a help number, wherever the link is.
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="tel:"]');
+      if (a) { RL.ev('llama', a.getAttribute('href').slice(4)); flush(); }
+    }, true);
+    corner();
+    if (ctx.pid) doneButton();
+    timer = setInterval(flush, EVERY);
+    setTimeout(flush, 800);
+  };
+
+  var curKey = null;
+  RL.screen = function (name, detail) {
+    var k = name + '|' + (detail || '');
+    if (k === curKey) return;
+    curKey = k; cur = name;
+    RL.ev('ver', detail);
+  };
+  RL.ev = function (action, detail) {
+    if (!started || off) return;
+    queue = loadQueue();
+    queue.push([ctx.pid, ctx.device, ctx.proto, ctx.version, ctx.session, ++n, new Date().toISOString(), cur, action, detail == null ? '' : String(detail).slice(0, 300)]);
+    if (queue.length > 20000) queue = queue.slice(-20000);
+    saveQueue();
+  };
+  RL.pid = function () { return ctx.pid; };
+  RL.pending = function () { return loadQueue().length; };
+
+  function payload(rows) { return JSON.stringify({ v: 1, rows: rows }); }
+
+  function flush() {
+    if (off || !url || sending || !loadQueue().length) return Promise.resolve();
+    if (navigator.onLine === false) return Promise.resolve();
+    sending = true;
+    queue = loadQueue();
+    var rows = queue.slice(0, BATCH);
+    return fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payload(rows) })
+      .then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); })
+      .then(function (t) {
+        if (!/^\s*\{?\s*"?ok/.test(t)) return Promise.reject(t);
+        // Drop exactly the rows that were sent; newer ones stay queued.
+        queue = loadQueue();
+        var sent = {};
+        rows.forEach(function (r) { sent[r[4] + '|' + r[5]] = true; });
+        queue = queue.filter(function (r) { return !sent[r[4] + '|' + r[5]]; });
+        saveQueue();
+        sending = false;
+        if (queue.length) return flush();
+      })
+      .catch(function () { sending = false; });
+  }
+  RL.flush = flush;
+
+  // When the page goes away there is no time to wait for an answer. The rows
+  // stay queued and the next flush resends them; the sheet drops duplicates.
+  function beacon() {
+    queue = loadQueue();
+    if (off || !url || !queue.length || !navigator.sendBeacon) return;
+    try { navigator.sendBeacon(url, new Blob([payload(queue.slice(0, BATCH))], { type: 'text/plain;charset=utf-8' })); } catch (e) { /* ignore */ }
+  }
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  function css() {
+    if (document.getElementById('rl-css')) return;
+    var st = document.createElement('style');
+    st.id = 'rl-css';
+    st.textContent =
+      '.rl-done{position:fixed;z-index:9998;font:700 11px/1 Nunito,system-ui,sans-serif;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;' +
+      'padding:5px 10px;border-radius:999px;border:1px solid rgba(0,0,0,.18);background:rgba(255,255,255,.88);color:#1f3d2b;box-shadow:0 1px 4px rgba(0,0,0,.15)}' +
+      '.rl-veil{position:fixed;inset:0;z-index:9999;background:rgba(10,20,15,.6);display:flex;align-items:center;justify-content:center;padding:16px}' +
+      '.rl-box{background:#fff;color:#1b2a22;border-radius:16px;max-width:360px;width:100%;padding:20px;font:15px/1.45 Nunito,system-ui,sans-serif}' +
+      '.rl-box h3{margin:0 0 8px;font-size:18px}.rl-box p{margin:0 0 12px}.rl-box small{color:#5b6b62}' +
+      '.rl-box button{display:block;width:100%;margin-top:8px;padding:12px;border-radius:12px;border:1px solid #c9d6ce;background:#f4f7f5;font:inherit;font-weight:700;color:#1b2a22}' +
+      '.rl-box button.main{background:#2f7a4f;border-color:#2f7a4f;color:#fff}';
+    document.head.appendChild(st);
+  }
+  function modal(html) {
+    css();
+    var el = document.createElement('div');
+    el.className = 'rl-veil';
+    el.innerHTML = '<div class="rl-box">' + html + '</div>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  // «Terminé»: only when the prototype was opened from the survey with a code.
+  function doneButton() {
+    css();
+    var b = document.createElement('button');
+    b.className = 'rl-done';
+    b.style.cssText = ctx.done;
+    b.textContent = 'Terminé';
+    var hold = null, held = false;
+    b.addEventListener('pointerdown', function () { held = false; hold = setTimeout(function () { held = true; panel(); }, 2000); });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (t) { b.addEventListener(t, function () { clearTimeout(hold); }); });
+    b.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    b.setAttribute('aria-label', 'Terminé, volver a la encuesta');
+    b.onclick = function () {
+      if (held) { held = false; return; }
+      var el = modal('<h3>¿Terminaste?</h3><p>Si ya terminaste, vuelve a la encuesta para seguir.</p>' +
+        '<button class="main" data-x="yes">Sí, terminé</button><button data-x="no">Seguir aquí</button>');
+      el.querySelector('[data-x="no"]').onclick = function () { el.remove(); };
+      el.querySelector('[data-x="yes"]').onclick = function () {
+        RL.ev('termina');
+        flush();
+        el.querySelector('.rl-box').innerHTML = '<h3>Listo, gracias</h3><p>Ya puedes volver a la encuesta: toca el botón de atrás de la tablet o abre SurveyCTO.</p><button data-x="close">Cerrar</button>';
+        el.querySelector('[data-x="close"]').onclick = function () { el.remove(); };
+      };
+    };
+    document.body.appendChild(b);
+  }
+
+  // Facilitator panel: five taps within 3 s in the top-left 64 px corner.
+  function corner() {
+    var taps = [];
+    document.addEventListener('pointerdown', function (e) {
+      if (e.clientX > 64 || e.clientY > 64 || (e.target.closest && e.target.closest('.rl-done, .rl-veil'))) { taps = []; return; }
+      var t = Date.now();
+      taps = taps.filter(function (x) { return t - x < 3000; });
+      taps.push(t);
+      if (taps.length >= 5) { taps = []; panel(); }
+    }, true);
+  }
+  function panel() {
+    var el = modal('<h3>Registro RADAR</h3><p><small>Código: <b>' + esc(ctx.pid || '(sin código)') + '</b><br>Dispositivo: ' + esc(ctx.device) +
+      '<br>Prototipo: ' + esc(ctx.proto + ' ' + ctx.version) + '<br>Envío: ' + esc(url ? 'hoja conectada' : 'sin dirección configurada') +
+      '<br>Eventos pendientes: <b data-x="n">' + loadQueue().length + '</b></small></p>' +
+      '<button class="main" data-x="send">Enviar ahora</button><button data-x="dl">Descargar respaldo</button><button data-x="close">Cerrar</button>');
+    function count() { el.querySelector('[data-x="n"]').textContent = loadQueue().length; }
+    el.querySelector('[data-x="send"]').onclick = function () { flush().then(count); };
+    el.querySelector('[data-x="dl"]').onclick = function () {
+      var blob = new Blob([payload(loadQueue())], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'radar_registro_' + ctx.device + '_' + new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-') + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+    el.querySelector('[data-x="close"]').onclick = function () { el.remove(); };
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+;
+RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transform:translateX(-50%)'});
+;
 /* RADAR Generaciones engine: card bag, bars, recruitment arcs, endings,
  * memory between generations and the post-run RADAR feedback. No DOM, so the
  * same file runs in the browser (window.RG.engine) and in Node tests.
@@ -4233,6 +4460,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
   var LETTER_GLYPH = { R: 'R', As: 'A', D: 'D', Ac: 'A', Re: 'R' };
 
   var app = document.getElementById('app');
+  var L = window.RL || { ev: function () {}, screen: function () {} };
   var S = { game: null, run: null, fb: null, screen: 'title', busy: false, back: 'title' };
 
   /* ---------- storage (per device; the game works without it) ---------- */
@@ -4264,6 +4492,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
   }
   function barName(id) { for (var i = 0; i < C.bars.length; i++) if (C.bars[i].id === id) return C.bars[i]; return {}; }
   function show(html, cls) {
+    if (S.screen !== 'game') L.screen(S.screen);
     app.innerHTML = html;
     app.className = cls || '';
     var first = app.querySelector('[data-focus]');
@@ -4440,6 +4669,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     var run = S.run;
     var v = E.view(run, C);
     if (!v) return finishRun();
+    L.screen('game', run.girl + ' | semana ' + run.week + ' | ' + v.id);
     var who = v.who || {};
     var bars = C.bars.map(function (b) {
       var val = v.bars[b.id];
@@ -4571,6 +4801,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       E.choose(S.run, C, side);
       var deltas = {};
       E.BAR_IDS.forEach(function (b) { deltas[b] = S.run.bars[b] - before[b]; });
+      L.ev('elige', (side === 'L' ? 'izquierda' : 'derecha') + ' | ' + v.id + ' | ' + E.BAR_IDS.map(function (b) { return b + Math.round(S.run.bars[b]); }).join(' '));
       save();
       S.busy = false;
       if (S.run.done) finishRun();
@@ -4579,6 +4810,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
   }
 
   function finishRun() {
+    L.ev('fin_año', S.run.girl + ' | ' + JSON.stringify(S.run.over || {}));
     S.fb = E.feedback(S.run, C);
     E.commitRun(S.game, S.run, C);
     unlocksSet('first');
@@ -4830,7 +5062,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       '<li><b>Bloquea y reporta la cuenta</b> en la misma app.</li>' +
       '<li><b>Cuéntale a alguien de confianza:</b> tu mamá, una tía, una prima, una profe o una amiga mayor.</li></ul>' +
       '<h2>Líneas gratuitas</h2>' + helpLines() +
-      '<h2>Para el equipo</h2><p class="small muted">El progreso se guarda solo en este celular. No se recoge ningún dato. Versión 0.4.</p>' +
+      '<h2>Para el equipo</h2><p class="small muted">El progreso se guarda solo en este celular. Durante las sesiones de RADAR se registra qué pantallas abres y qué eliges, con un código que no dice quién eres. No se guarda tu nombre, tu número ni dónde estás. Versión 0.4.</p>' +
       '<button class="btn quiet small" data-act="reset">Borrar el progreso en este celular</button></div>');
   }
 
@@ -4867,8 +5099,9 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
       S.fb = null; save(); renderChainEnd();
     } else if (act === 'new') {
       if (S.game && !window.confirm('Vas a empezar una historia nueva. Se borra la que tienes. ¿Seguimos?')) return;
-      wipe(); renderPick();
+      L.ev('nueva_historia'); wipe(); renderPick();
     } else if (act === 'pick') {
+      L.ev('perfil', el.getAttribute('data-id'));
       S.game = E.newGame(C, el.getAttribute('data-id'));
       S.run = E.newRun(S.game, C);
       S.fb = null;
@@ -4900,7 +5133,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
     } else if (act === 'resume') {
       renderGame();
     } else if (act === 'reset') {
-      if (window.confirm('¿Borrar todo el progreso en este celular?')) { wipe(); renderTitle(); }
+      if (window.confirm('¿Borrar todo el progreso en este celular?')) { L.ev('borra_avance'); wipe(); renderTitle(); }
     }
   });
 
