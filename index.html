@@ -414,6 +414,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .toast > span { display: flex; align-items: center; gap: 8px; }
 .toast .dl { background: var(--ro-btn); color: #fff; }
 @keyframes toast { from { opacity: 0; transform: scale(0.92); } }
+.toast .close-note { flex-wrap: wrap; padding: 2px 4px; }
+.cn-l, .att-letters { display: inline-flex; gap: 3px; }
+.cn-l i, .att-letters i { font-style: normal; font-weight: 900; font-size: 12px; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 1.5px solid currentColor; opacity: .55; }
+.cn-l i.lit, .att-letters i.lit { background: var(--ro-btn); border-color: var(--ro-btn); color: #fff; opacity: 1; }
+.att-letters { margin-right: 4px; color: var(--ink, #1b2a22); }
+.bars-tip { align-self: stretch; margin: 0 0 8px; padding: 10px 12px; border-radius: 14px; background: #fff7e6; color: #3b2a07; border: 1px solid #f2b029;
+  font-size: 13.5px; line-height: 1.4; animation: toast 0.5s ease; }
+.bars-tip b { display: block; margin-bottom: 2px; }
 
 .fb-threads { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: 13px; }
 .fb-threads .thr { gap: 5px; }
@@ -986,7 +994,7 @@ daily('bi_apafa', 'mama', 'Tu mamá no completa la cuota de la APAFA y le da ver
   { l: 'Le digo que no vaya', fx: { f: -4, s: -2 } },
   { l: 'Vendo marcianos en el recreo', fx: { p: 8, a: -3, f: 3 } }, { theme: 'plata', when: { profile: ['bi'] } });
 
-daily('bi_mototaxi', 'vecina', 'Un mototaxista te dice «princesa» cada vez que pasas por la esquina.',
+daily('bi_mototaxi', 'vecina', '«Ese mototaxista de la esquina te dice “princesa” cada vez que pasas. No me gusta cómo te mira.»',
   { l: 'Lo ignoro', fx: { s: -2 } },
   { l: 'Le cuento a mi mamá', fx: { f: 6 }, radar: 1 }, { when: { profile: ['bi'] } });
 
@@ -1466,7 +1474,7 @@ RG_CONTENT.winMessages.end_win_pasada = 'Las ofertas reales se pueden comprobar:
 arc('chiclayo', {
   // What the recruiter charges after a late cut (content round 2026-11-02).
   debt: 'el pasaje que te pagamos',
-  title: 'Chamba en Chiclayo', channel: 'facebook',
+  title: 'Chamba en Chiclayo', channel: 'facebook', private: 'whatsapp',
   recruiter: { name: 'Rosa · Empleos Norte', names: [
     { name: 'Rosa · Empleos Norte', short: 'Rosa', re: 'Empleos Norte Perú' },
     { name: 'Sol del Norte Empleos', short: 'Sol del Norte', re: 'Sol del Norte Trabajos' },
@@ -1595,7 +1603,7 @@ memory('mem_cut_chiclayo_4', 'm_cutAB_chiclayo', 'prev',
 arc('fotos', {
   // What the recruiter charges after a late cut (content round 2026-11-02).
   debt: 'los S/ 20 que te yapeé',
-  title: 'Plata por fotos', channel: 'instagram',
+  title: 'Plata por fotos', channel: 'instagram', private: 'whatsapp',
   recruiter: { name: 'bruno.promos', names: [
     { name: 'bruno.promos', re: 'promos.bruno2' },
     { name: 'moda.urbana.pe', re: 'modaurbana.pe2' },
@@ -1850,7 +1858,7 @@ memory('mem_cut_casting_3', 'm_cutA_casting', 'prev',
 arc('beca', {
   // What the recruiter charges after a late cut (content round 2026-11-02).
   debt: 'el pasaje y el cupo que te separamos',
-  title: 'Beca en Lima', channel: 'facebook',
+  title: 'Beca en Lima', channel: 'facebook', private: 'whatsapp',
   recruiter: { name: 'Fundación Futuro Joven', names: [
     { name: 'Fundación Futuro Joven', short: 'Futuro Joven', re: 'Becas Perú Joven' },
     { name: 'Fundación Brisa Norteña', short: 'Brisa Norteña', re: 'Becas Brisa Norteña' },
@@ -1965,7 +1973,7 @@ memory('mem_cut_beca_2', 'm_cut_beca', 'prev',
 arc('freefire', {
   // What the recruiter charges after a late cut (content round 2026-11-02).
   debt: 'los diamantes que te regalé',
-  title: 'Dúo en Free Fire', channel: 'freefire',
+  title: 'Dúo en Free Fire', channel: 'freefire', private: 'whatsapp',
   recruiter: { name: 'Kevin_FF', names: [
     { name: 'Kevin_FF', short: 'Kevin', re: 'Kev1n_FF' },
     { name: 'Dark_Zeus', re: 'DarkZeus_2' },
@@ -2089,7 +2097,7 @@ memory('mem_cut_freefire_3', 'm_cutA_freefire', 'prev',
 arc('anfitriona', {
   // What the recruiter charges after a late cut (content round 2026-11-02).
   debt: 'el pasaje que te mandamos',
-  title: 'Anfitriona en Mazuko', channel: 'tiktok',
+  title: 'Anfitriona en Mazuko', channel: 'tiktok', private: 'whatsapp',
   recruiter: { name: 'Trabajo Mazuko', names: [
     { name: 'Trabajo Mazuko', re: 'Trabajo Mazuko 2' },
     { name: 'Chamba Selva Ya', re: 'Chamba Selva Ya 2' },
@@ -3362,7 +3370,7 @@ card('clx_amiga', { kind: 'climax', who: 'amiga',
 })(typeof window !== 'undefined' ? window : globalThis);
 
 ;
-RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transform:translateX(-50%)'});
+RL.init({proto: 'generaciones', version: '0.4.3', done: 'top:3px;left:50%;transform:translateX(-50%)'});
 ;
 /* RADAR Generaciones engine: card bag, bars, recruitment arcs, endings,
  * memory between generations and the post-run RADAR feedback. No DOM, so the
@@ -3807,6 +3815,7 @@ RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transf
     var att = arcId ? run.attempts[arcId] : null;
     var fx = scaled(ch.fx);
     run.toast = [];
+    run.closeNote = null;
     BAR_IDS.forEach(function (b) {
       if (!fx[b]) return;
       run.bars[b] += fx[b];
@@ -3847,6 +3856,10 @@ RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transf
       }
       if (ch.cut) {
         att.cut = c.moment;
+        // Cutting is a decision, as in the Simulador (team review 2026-11-10).
+        att.letters.D = true; run.letters.D = true;
+        // Closing line with the RADAR letters she used in this offer (team review 2026-11-10).
+        run.closeNote = { arc: arcId, letters: C.letters.map(function (L) { return { id: L.id, name: L.name, lit: !!att.letters[L.id] }; }) };
         if (run.active === arcId) run.active = null;
         // At most two cards follow a cut: the recruiter writes again, and one
         // that fits what happened (thinking it over if she went far, saving
@@ -4144,10 +4157,12 @@ RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transf
       }),
       threads: threadState(run, C),
       toast: (run.toast || []).map(function (id) { return deedView(C, id, run.girl); }),
+      closeNote: run.closeNote ? { title: C.arcs[run.closeNote.arc].title, letters: run.closeNote.letters } : null,
       who: whoOf(run, C, c, arcId, memName), whoLabel: c.whoLabel ? fill(c.whoLabel, v) : null,
       text: cap(fill(text, v)),
       chat: c.chat ? {
-        channel: c.chat.channel || (arc && arc.channel),
+        // Arcs that move to WhatsApp show that channel from moment B on (team review 2026-11-10).
+        channel: c.chat.channel || (arc && arc.private && /^B/.test(c.moment || '') ? arc.private : arc && arc.channel),
         name: fill(c.chat.name || v.recruiter, v),
         lines: c.chat.lines.map(function (ln) {
           var t = fill(ln[0], v);
@@ -4311,7 +4326,8 @@ RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transf
         arc: p.arc, title: arc.title, channel: arc.channel, reached: a.reached,
         cutAt: a.cut ? MOMENTS.indexOf(a.cut) : null, met: o.type === 'meet' && o.arc === p.arc,
         withSomeone: a.withSomeone, capture: a.capture, report: a.report, toldAfter: a.toldAfter, warned: a.warned, paid: a.paid, late: a.late,
-        signals: sigs, exits: arc.exits.map(function (e) { return fill(e, v); })
+        signals: sigs, exits: arc.exits.map(function (e) { return fill(e, v); }),
+        letters: C.letters.map(function (L) { return { id: L.id, name: L.name, lit: !!a.letters[L.id] }; })
       };
     });
     var letters = C.letters.map(function (L) {
@@ -4664,6 +4680,17 @@ RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transf
 
   /* ---------- the table ---------- */
 
+  // The first time a bar moves, one short line on what the bars are (team
+  // review 2026-11-10). Shown once per participant: the unlocks are wiped
+  // with a new participant code.
+  function barsTip(deltas) {
+    if (!deltas || !E.BAR_IDS.some(function (b) { return deltas[b]; }) || unlocksGet().barsTip) return '';
+    unlocksSet('barsTip');
+    var names = C.bars.map(function (b) { return b.name; });
+    return '<div class="bars-tip" role="status"><b>Tus cuatro barras</b>' + esc(names.slice(0, -1).join(', ') + ' y ' + names[names.length - 1]) +
+      ' suben o bajan con lo que eliges. Lo más seguro es tenerlas cerca de la mitad: en las dos puntas te pueden enganchar. Más en Ayuda.</div>';
+  }
+
   function renderGame(deltas) {
     S.screen = 'game';
     var run = S.run;
@@ -4712,7 +4739,9 @@ RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transf
     var threads = (v.threads || []).map(function (t) {
       return '<span class="thr t-' + t.id + (t.closed ? ' closed' : '') + '" title="' + esc(t.name) + '">' + threadIcon(t.id) + pips(t.at, t.steps) + '</span>';
     }).join('');
-    var toast = v.toast && v.toast.length ? '<div class="toast" role="status">' + v.toast.map(function (d) {
+    var close = v.closeNote ? '<span class="close-note"><b>Cortaste «' + esc(v.closeNote.title) + '»</b><span class="cn-l">' +
+      v.closeNote.letters.map(function (l) { return '<i class="' + (l.lit ? 'lit' : '') + '" title="' + esc(l.name) + '">' + LETTER_GLYPH[l.id] + '</i>'; }).join('') + '</span></span>' : '';
+    var toast = (v.toast && v.toast.length) || close ? '<div class="toast" role="status">' + close + (v.toast || []).map(function (d) {
       return '<span><span class="dl">' + esc(d.letter) + '</span><b>Hazaña: ' + esc(d.name) + '</b></span>';
     }).join('') + '</div>' : '';
 
@@ -4723,7 +4752,7 @@ RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transf
 
     show('<div class="top"><div class="bars" role="group" aria-label="Tu vida">' + bars + '</div>' +
       '<div class="year"><span>' + esc(v.month) + '</span>' + yearLine(v.week, v.acts, v.offers) + '<span class="act-name">' + esc(v.act.name) + '</span></div></div>' +
-      '<div class="table"><div class="scene">' + toast + scene + '</div>' +
+      '<div class="table"><div class="scene">' + barsTip(deltas) + toast + scene + '</div>' +
       '<div class="stack"><div class="under"></div><div class="card enter f-' + fr.id + (v.ending ? ' end-card' : '') + '" id="card" role="group" aria-label="Carta. Desliza o usa los botones.">' +
       band + face + plate +
       '<div class="choice L">' + esc(v.L.l) + '</div><div class="choice R">' + esc(v.R.l) + '</div></div></div>' +
@@ -4845,6 +4874,9 @@ RL.init({proto: 'generaciones', version: '0.4.2', done: 'top:3px;left:50%;transf
     if (a.late) chips.push('<span class="chip warn">Cortó cuando ya había aceptado algo, y le escribieron para cobrarle</span>');
     if (a.paid) chips.push('<span class="chip warn">Le pagó a quien la amenazaba: quien amenaza siempre pide más</span>');
     if (a.warned) chips.push('<span class="chip good">Avisó a otra chica</span>');
+    if (a.letters) chips.unshift('<span class="att-letters" aria-label="Letras RADAR en esta historia">' + a.letters.map(function (l) {
+      return '<i class="' + (l.lit ? 'lit' : '') + '" title="' + esc(l.name) + '">' + LETTER_GLYPH[l.id] + '</i>';
+    }).join('') + '</span>');
     var ch = CHANNELS[a.channel] || {};
     // The exits come first; the signals are folded so the attempt stays short.
     var caught = a.signals.filter(function (s) { return s.caught; }).length;
